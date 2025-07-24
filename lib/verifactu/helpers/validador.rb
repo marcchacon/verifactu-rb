@@ -14,54 +14,45 @@ module Verifactu
       # @param fecha [String, Date] Fecha a validar
       # @raise [ArgumentError] Si la fecha es nil, no es un objeto Date o una cadena de fecha válida
       def self.validar_fecha_pasada(fecha)
-        raise ArgumentError, "Fecha no puede ser nil" if fecha.nil?
-        if fecha.is_a?(String)
-          begin
-            fecha = Date.parse(fecha, '%d-%m-%Y')
-          rescue ArgumentError
-            raise ArgumentError, "Formato de fecha inválido. Debe ser 'dd-mm-aaaa'."
-          end
-        elsif !fecha.is_a?(Date)
-          raise ArgumentError, "Fecha debe ser un objeto Date o una cadena de fecha válida"
-        end
-        raise ArgumentError, "Fecha no puede estar en el futuro" if fecha >= Date.today
+        fecha_d = self.validar_fecha(fecha)
+        raise ArgumentError, "Fecha no puede estar en el futuro" if fecha_d >= Date.today
       end
 
       # Validar si la fecha es válida y no está en el pasado. 
       # @param fecha [String, Date] Fecha a validar
       # @raise [ArgumentError] Si la fecha es nil, no es un objeto Date o una cadena de fecha válida
       def self.validar_fecha_futura(fecha)
-        raise ArgumentError, "Fecha no puede ser nil" if fecha.nil?
-        if fecha.is_a?(String)
-          begin
-            fecha = Date.parse(fecha, '%d-%m-%Y')
-          rescue ArgumentError
-            raise ArgumentError, "Formato de fecha inválido. Debe ser 'dd-mm-aaaa'."
-          end
-        elsif !fecha.is_a?(Date)
-          raise ArgumentError, "Fecha debe ser un objeto Date o una cadena de fecha válida"
-        end
-        raise ArgumentError, "Fecha no puede estar en el pasado" if fecha < Date.today
+        fecha_d = self.validar_fecha(fecha)
+        raise ArgumentError, "Fecha no puede estar en el pasado" if fecha_d < Date.today
       end
 
       # Validar si la fecha es válida y es el último día del año. 
       # @param fecha [String, Date] Fecha a validar
       # @raise [ArgumentError] Si la fecha es nil, no es un objeto Date o una cadena de fecha válida
       def self.validar_fecha_fin_de_ano(fecha)
+        fecha_d = self.validar_fecha(fecha)
+        
+        aeat_year = Date.today.year
+        valid_years = [aeat_year, aeat_year - 1]
+        raise ArgumentError, "El año de la fecha debe ser igual al año actual o al año anterior" unless valid_years.include?(fecha_d.year)
+        raise ArgumentError, "Fecha debe tener el formato 31-12-20XX" unless fecha_d == Date.new(fecha_d.year, 12, 31)
+      end
+
+      # Validar si la fecha es válida
+      # @param fecha [String, Date] Fecha a validar
+      # @raise [ArgumentError] Si la fecha es nil, no es un objeto Date
+      def self.validar_fecha(fecha)
         raise ArgumentError, "Fecha no puede ser nil" if fecha.nil?
         if fecha.is_a?(String)
           begin
-            fecha = Date.parse(fecha, '%d-%m-%Y')
+            fecha_d = Date.parse(fecha, '%d-%m-%Y')
           rescue ArgumentError
             raise ArgumentError, "Formato de fecha inválido. Debe ser 'dd-mm-aaaa'."
           end
         elsif !fecha.is_a?(Date)
           raise ArgumentError, "Fecha debe ser un objeto Date o una cadena de fecha válida"
         end
-        aeat_year = Date.today.year
-        valid_years = [aeat_year, aeat_year - 1]
-        raise ArgumentError, "El año de la fecha debe ser igual al año actual o al año anterior" unless valid_years.include?(fecha.year)
-        raise ArgumentError, "Fecha debe tener el formato 31-12-20XX" unless fecha == Date.new(fecha.year, 12, 31)
+        fecha_d
       end
   end
 end
