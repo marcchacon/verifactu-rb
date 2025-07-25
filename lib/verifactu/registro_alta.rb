@@ -62,7 +62,7 @@ module Verifactu
                    id_acuerdo_sistema_informatico: nil,
                    tipo_huella:,
                    huella:,
-                   signature: nil,)
+                   signature: nil)
 
       # Validaciones de id_factura
       raise ArgumentError, "id_factura is required" if id_factura.nil?
@@ -223,8 +223,97 @@ module Verifactu
         raise ArgumentError, "solo las facturas R5 y R1 pueden tener cupon" unless tipo_factura == 'R5' || tipo_factura == 'R1'
       end
 
+      # Validaciones de desglose
+      # Las validaciones de desglose que requieran valores de registro_alta se realizan aqui
+      raise ArgumentError, "desglose is required" if desglose.nil?
+      raise ArgumentError, "desglose debe ser una lista de instancias de Desglose" unless desglose.is_a?(Array)
+      raise ArgumentError, "desglose no puede estar vacío" if desglose.empty?
+      sum_base_imponible_cuota_repercutida = 0
+      sum_cuota = 0
+      sum_importe_desglose = 0
+      desglose.each do |d|
+        raise ArgumentError, "Cada elemento de desglose debe ser una instancia de Desglose" unless d.is_a?(Desglose)
+        if d.impuesto == "01" 
+          fecha_factura = Date.parse(fecha_operacion || id_factura.fecha_expedicion_factura, "dd-mm-yyyy")
+          case d.tipo_impositivo
+          when "5"
+            raise ArgumentError, "tipo_impositivo no puede ser 5 si la fecha de la factura no esta entre 1 de julio de 2022 y 30 de septiembre de 2024" unless fecha_factura.between?(Date.new(2022, 7, 1), Date.new(2024, 9, 30))
+            if d.tipo_recargo_equivalencia == "0.5"
+              raise ArgumentError, "tipo_recargo_equivalencia debe ser 0.5 si la fecha de la factura es menor o igual a 31 de diciembre de 2022" unless fecha_factura <= Date.new(2022, 12, 31)
+            elsif d.tipo_recargo_equivalencia == "0.62"
+              raise ArgumentError, "tipo_recargo_equivalencia debe ser 0.62 si la fecha de la factura esta entre 1 de enero de 2023 y 30 de septiembre de 2024" unless fecha_factura.between?(Date.new(2023, 1, 1), Date.new(2024, 9, 30))
+            end
+          when "2"
+            raise ArgumentError, "tipo_impositivo no puede ser 2 si la fecha de la factura no esta entre 1 de octubre de 2024 y 31 de diciembre de 2024" unless fecha_factura.between?(Date.new(2024, 10, 1), Date.new(2024, 12, 31))
+          when "7.5"
+            raise ArgumentError, "tipo_impositivo no puede ser 7.5 si la fecha de la factura no esta entre 1 de octubre de 2024 y 31 de diciembre de 2024" unless fecha_factura.between?(Date.new(2024, 10, 1), Date.new(2024, 12, 31))
+          when "0"
+            if d.tipo_recargo_equivalencia == "0"
+              raise ArgumentError, "tipo_recargo_equivalencia debe ser 0 si la fecha de la factura esta entre 1 de enero de 2023 y menor 30 de septiembre de 2024" unless fecha_factura.between?(Date.new(2023, 1, 1), Date.new(2024, 9, 30))
+            end
+          end
+        end
+
+        if d.calificacion_operacion == "S2"
+          valid_tipo_factura = ["F1", "F3", "R1", "R2", "R3", "R4"]
+          raise ArgumentError, "cuando calificacion_operacion es S2, tipo_factura debe ser uno de los siguientes valores: #{valid_tipo_factura.join(', ')}" unless valid_tipo_factura.include?(tipo_factura)
+        end
+
+        error_message = "cuando clave_regimen es #{d.clave_regimen}"
+        case d.clave_regimen
+        when "06"
+          if d.impuesto == "01" || d.impuesto == "03"
+            invalid_tipo_factura = ["F2", "F3", "R5"]
+            raise ArgumentError, "#{error_message}, tipo_factura no puede ser uno de los siguientes valores: #{invalid_tipo_factura.join(', ')}" if invalid_tipo_factura.include?(tipo_factura)
+          end
+        when "10"
+          valid_tipo_factura = ["F1"]
+          raise ArgumentError, "#{error_message}, tipo_factura debe ser uno de los siguientes valores: #{valid_tipo_factura.join(', ')}" unless valid_tipo_factura.include?(tipo_factura)
+          destinatarios.each do |destinatario|
+            raise ArgumentError, "#{error_message}, todos los destinatarios deben tener un NIF" unless destinatario.nif
+          end
+        when "14"
+          if d.impuesto == "01" || d.impuesto == "03"
+            raise ArgumentError, "#{error_message}, fecha_operacion es obligatoria" if fecha_operacion.nil?
+            raise ArgumentError, "#{error_message}, fecha_operacion debe posterior a fecha_expedicion_factura" if fecha_operacion < id_factura.fecha_expedicion_factura
+          end
+        end
+
+        unless tipo_rectificativa == "I" || tipo_factura == "R2" || tipo_factura == "R3"
+          d.validar_cuota_repercutida()
+        end
+
+        sum_base_imponible_cuota_repercutida += d.base_imponible_o_importe_no_sujeto.to_f + d.cuota_repercutida.to_f
+        sum_cuota += d.cuota_repercutida.to_f + d.cuota_recargo_equivalencia.to_f
+
+        clave_regimen_exempta_importe_total = ['03', '05', '06', '08', '09']
+        unless clave_regimen_exempta_importe_total.include?(d.clave_regimen) 
+          sum_importe_desglose += d.base_imponible_o_importe_no_sujeto.to_f + d.cuota_repercutida.to_f + d.cuota_recargo_equivalencia.to_f
+        end
+      end
+
+      if tipo_factura == "F2"
+        unless num_registro_acuerdo_facturacion || factura_sin_identif_destinatario_art61d == "S"
+          raise ArgumentError, "La suma de base_imponible_o_importe_no_sujeto y cuota_repercutida de todos los desgloses debe ser inferior a #{Verifactu::Config::MAXIMO_FACTURA_SIMPLIFICADA+Verifactu::Config::MARGEN_ERROR_FACTURA_SIMPLIFICADA}" if sum_base_imponible_cuota_repercutida > Verifactu::Config::MAXIMO_FACTURA_SIMPLIFICADA + Verifactu::Config::MARGEN_ERROR_FACTURA_SIMPLIFICADA
+        end
+      end
+
+      # Validaciones de cuota_total
+      raise ArgumentError, "cuota_total is required" if cuota_total.nil?
+      raise ArgumentError, "cuota_total debe tener maximo 12 digitos antes del decimal y 2 decimales" unless Verifactu::Helper::Validador.validar_digito(cuota_total, digitos: 12)
+      diferencia_cuota_total = cuota_total.to_f - sum_cuota
+      raise ArgumentError, "Cuota total no coincide con la suma de desgloses: #{cuota_total} - #{sum_cuota} = #{diferencia_cuota_total}" if diferencia_cuota_total.abs > Config::MARGEN_ERROR_CUOTA_TOTAL
+      
+      # Validaciones de importe_total
       raise ArgumentError, "importe_total is required" if importe_total.nil?
+      raise ArgumentError, "importe_total debe tener maximo 12 digitos antes del decimal y 2 decimales" unless Verifactu::Helper::Validador.validar_digito(importe_total, digitos: 12)
+      diferencia_importe_total = importe_total.to_f - sum_importe_desglose
+      raise ArgumentError, "importe_total no coincide con la suma de desgloses: #{importe_total} - #{sum_importe_desglose} = #{diferencia_importe_total}" if diferencia_importe_total.abs > Config::MARGEN_ERROR_IMPORTE_TOTAL
+
+      # Validaciones de encadenamiento
       raise ArgumentError, "encadenamiento is required" if encadenamiento.nil?
+      raise ArgumentError, "encadenamiento debe ser una instancia de Encadenamiento" unless encadenamiento.is_a?(EncadenamientoRegistroAnterior)
+
       raise ArgumentError, "sistema_informatico is required" if sistema_informatico.nil?
       raise ArgumentError, "fecha_hora_huso_gen_registro is required" if fecha_hora_huso_gen_registro.nil?
       raise ArgumentError, "tipo_huella is required" if tipo_huella.nil?

@@ -16,7 +16,7 @@ module Verifactu
 
       # Validate NIF format
       if nif
-        Helper::Validador.validar_nif(nif)
+        Verifactu::Helper::Validador.validar_nif(nif)
       end
 
       # Validate IDOtro if provided

@@ -54,5 +54,18 @@ module Verifactu
         end
         fecha_d
       end
+
+      # Validar si el digito es un número válido
+      # @note Esta funcion se ha extraido para facilitar el mantenimiento y reutilización
+      # @note De esta forma, se puede cambiar globalmente el separador de decimales o el formato de validación sin afectar a todas las clases que lo utilizan
+      # @param digito [String] Dígito a validar
+      # @param max_length [Integer] Longitud máxima del dígito
+      # @raise [ArgumentError] Si el dígito es nil, no es una cadena o no cumple con el formato
+      def self.validar_digito(digito, digitos: 12)
+        raise ArgumentError, "Dígito no puede ser nil" if digito.nil?
+        raise ArgumentError, "Dígito debe ser una cadena" unless digito.is_a?(String)
+        return true if digito =~ /^\d{1,#{digitos}}(\.\d{0,2})?$/
+        false
+      end
   end
 end

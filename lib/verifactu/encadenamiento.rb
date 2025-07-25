@@ -1,5 +1,5 @@
 module Verifactu
-  class EncadenamientoRegistroAnterior
+  class Encadenamiento
     attr_reader :nif, :num_serie_factura, :fecha_expedicion, :huella_registro_anterior
 
     #
