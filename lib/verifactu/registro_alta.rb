@@ -311,32 +311,78 @@ module Verifactu
       raise ArgumentError, "importe_total no coincide con la suma de desgloses: #{importe_total} - #{sum_importe_desglose} = #{diferencia_importe_total}" if diferencia_importe_total.abs > Config::MARGEN_ERROR_IMPORTE_TOTAL
 
       # Validaciones de encadenamiento
+      #TODO: Asegurar que encadenamiento es la ultima factura enviada
       raise ArgumentError, "encadenamiento is required" if encadenamiento.nil?
       raise ArgumentError, "encadenamiento debe ser una instancia de Encadenamiento" unless encadenamiento.is_a?(EncadenamientoRegistroAnterior)
 
+      # Validaciones de sistema_informatico
       raise ArgumentError, "sistema_informatico is required" if sistema_informatico.nil?
-      raise ArgumentError, "fecha_hora_huso_gen_registro is required" if fecha_hora_huso_gen_registro.nil?
-      raise ArgumentError, "tipo_huella is required" if tipo_huella.nil?
-      raise ArgumentError, "huella is required" if huella.nil?
-      
-      
+      raise ArgumentError, "sistema_informatico debe ser una instancia de SistemaInformatico" unless sistema_informatico.is_a?(SistemaInformatico)
 
-      @id_version = Verifactu::Config::ID_VERSION
+      # Validaciones de fecha_hora_huso_gen_registro
+      raise ArgumentError, "fecha_hora_huso_gen_registro is required" if fecha_hora_huso_gen_registro.nil?
+      unless fecha_hora_huso_gen_registro.is_a?(String) && fecha_hora_huso_gen_registro.match?(/\A\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})\z/)
+        raise ArgumentError, "fecha_hora_huso_gen_registro debe estar en formato ISO 8601: YYYY-MM-DDThh:mm:ssTZD (ej: 2024-01-01T19:20:30+01:00)"
+      end
+
+      # Validaciones de num_registro_acuerdo_facturacion
+      if num_registro_acuerdo_facturacion
+        raise ArgumentError, "num_registro_acuerdo_facturacion debe ser una String" unless num_registro_acuerdo_facturacion.is_a?(String)
+        raise ArgumentError, "num_registro_acuerdo_facturacion debe tener una longitud máxima de 15 caracteres" if num_registro_acuerdo_facturacion.length > 15
+        # TODO verificar que exista en la AEAT
+      end
+       
+      # Validaciones de id_acuerdo_sistema_informatico
+      if id_acuerdo_sistema_informatico
+        raise ArgumentError, "id_acuerdo_sistema_informatico debe ser una String" unless id_acuerdo_sistema_informatico.is_a?(String)
+        raise ArgumentError, "id_acuerdo_sistema_informatico debe tener una longitud máxima de 16 caracteres" if id_acuerdo_sistema_informatico.length > 16
+        # TODO verificar que exista en la AEAT
+      end
       
+      # Validaciones de tipo_huella
+      raise ArgumentError, "tipo_huella is required" if tipo_huella.nil?
+      raise ArgumentError, "tipo_huella debe estar entre #{Verifactu::Config::L12.join(', ')}" unless Verifactu::Config::L12.include?(tipo_huella.upcase)
+
+      # Validaciones de huella
+      raise ArgumentError, "huella is required" if huella.nil?
+      # TODO: Verificar que huella cumple con los requisitos del documento Especificaciones técnicas para generación de la huella o «hash» de los registros de facturación
+
+      # Validaciones de signature
+      if signature
+        # TODO: Verificar que signature cumple con formato del "schema", en http://www.w3.org/2000/09/xmldsig#
+      end
+      
+      @id_version = Verifactu::Config::ID_VERSION
       @id_factura = id_factura # Instancia de IDFactura
       @ref_externa = ref_externa
       @nombre_razon_emisor = nombre_razon_emisor
-      @tipo_registro_sif = tipo_registro_sif
+      @subsanacion = subsanacion
+      @rechazo_previo = rechazo_previo
       @tipo_factura = tipo_factura
+      @tipo_rectificativa = tipo_rectificativa
+      @facturas_rectificativas = facturas_rectificativas
+      @facturas_sustituidas = facturas_sustituidas
+      @importe_rectificacion = importe_rectificacion
+      @fecha_operacion = fecha_operacion
       @descripcion_operacion = descripcion_operacion
-      @destinatarios = destinatarios # Instancia de Destinatarios
-      @desglose = desglose # Instancia de Desglose
+      @factura_simplificada_Art7273 = factura_simplificada_Art7273
+      @factura_sin_identif_destinatario_art61d = factura_sin_identif_destinatario_art61d
+      @macrodato = macrodato
+      @emitida_por_tercero_o_destinatario = emitida_por_tercero_o_destinatario
+      @tercero = tercero # Instancia de PersonaFisicaJuridica
+      @destinatarios = destinatarios # Array de instancias de Destinatario
+      @cupon = cupon
+      @desglose = desglose # Array de instancias de Desglose
+      @cuota_total = cuota_total
       @importe_total = importe_total
-      @encadenamiento_registro_anterior = encadenamiento_registro_anterior # Instancia de EncadenamientoRegistroAnterior
+      @encadenamiento = encadenamiento # Instancia de Encadenamiento
       @sistema_informatico = sistema_informatico # Instancia de SistemaInformatico
-      @fecha_gen_registro = fecha_gen_registro
-      @hora_gen_registro = hora_gen_registro
-      @huso_horario_gen_registro = huso_horario_gen_registro
+      @fecha_hora_huso_gen_registro = fecha_hora_huso_gen_registro
+      @num_registro_acuerdo_facturacion = num_registro_acuerdo_facturacion
+      @id_acuerdo_sistema_informatico = id_acuerdo_sistema_informatico
+      @tipo_huella = tipo_huella
+      @huella = huella
+      @signature = signature
 
       if importe_total.abs > 100_000_000.00
         @macrodato = 'S'
