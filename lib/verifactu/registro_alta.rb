@@ -55,7 +55,6 @@ module Verifactu
                    desglose:,
                    cuota_total: nil,
                    importe_total:, 
-                   encadenamiento:, 
                    sistema_informatico:,
                    fecha_hora_huso_gen_registro:, 
                    num_registro_acuerdo_facturacion: nil,
@@ -310,11 +309,6 @@ module Verifactu
       diferencia_importe_total = importe_total.to_f - sum_importe_desglose
       raise ArgumentError, "importe_total no coincide con la suma de desgloses: #{importe_total} - #{sum_importe_desglose} = #{diferencia_importe_total}" if diferencia_importe_total.abs > Config::MARGEN_ERROR_IMPORTE_TOTAL
 
-      # Validaciones de encadenamiento
-      #TODO: Asegurar que encadenamiento es la ultima factura enviada
-      raise ArgumentError, "encadenamiento is required" if encadenamiento.nil?
-      raise ArgumentError, "encadenamiento debe ser una instancia de Encadenamiento" unless encadenamiento.is_a?(EncadenamientoRegistroAnterior)
-
       # Validaciones de sistema_informatico
       raise ArgumentError, "sistema_informatico is required" if sistema_informatico.nil?
       raise ArgumentError, "sistema_informatico debe ser una instancia de SistemaInformatico" unless sistema_informatico.is_a?(SistemaInformatico)
@@ -352,6 +346,8 @@ module Verifactu
         # TODO: Verificar que signature cumple con formato del "schema", en http://www.w3.org/2000/09/xmldsig#
       end
       
+      raise ArgumentError, "ID VERSION NO ES UNA VERSION ACEPTADA POR VERIFACTU" unless Verifactu::Config::L15.include?(Verifactu::Config::ID_VERSION)
+
       @id_version = Verifactu::Config::ID_VERSION
       @id_factura = id_factura # Instancia de IDFactura
       @ref_externa = ref_externa
@@ -375,7 +371,7 @@ module Verifactu
       @desglose = desglose # Array de instancias de Desglose
       @cuota_total = cuota_total
       @importe_total = importe_total
-      @encadenamiento = encadenamiento # Instancia de Encadenamiento
+      @encadenamiento = Verifactu::Helper::Encadenamiento.generar_encadenamiento()
       @sistema_informatico = sistema_informatico # Instancia de SistemaInformatico
       @fecha_hora_huso_gen_registro = fecha_hora_huso_gen_registro
       @num_registro_acuerdo_facturacion = num_registro_acuerdo_facturacion

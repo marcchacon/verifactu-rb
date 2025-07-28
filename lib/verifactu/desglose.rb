@@ -12,7 +12,7 @@ module Verifactu
     :tipo_recargo_equivalencia,
     :cuota_recargo_equivalencia,
 
-    def initialize(impuesto: nil, clave_regimen: nil, calificacion_operacion: nil, operacion_exenta: nil, tipo_impositivo: nil, base_imponible_o_importe_no_sujeto:, base_imponible_a_coste: nil, cuota_repercutida: nil, tipo_recargo_equivalencia: nil, cuota_recargo_equivalencia: nil)
+    def initialize(impuesto: '01', clave_regimen: nil, calificacion_operacion: nil, operacion_exenta: nil, tipo_impositivo: nil, base_imponible_o_importe_no_sujeto:, base_imponible_a_coste: nil, cuota_repercutida: nil, tipo_recargo_equivalencia: nil, cuota_recargo_equivalencia: nil)
       raise ArgumentError, "impuesto debe ser una de #{Verifactu::Config::L1.join(', ')} o nil" unless  impuesto.nil? || Verifactu::Config::L1.include?(impuesto)
      
       raise ArgumentError, "se necesita calificacion_operacion o operacion_exenta" if calificacion_operacion.nil? && operacion_exenta.nil?

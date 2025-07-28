@@ -67,5 +67,6 @@ module Verifactu
         return true if digito =~ /^\d{1,#{digitos}}(\.\d{0,2})?$/
         false
       end
+    end
   end
 end

@@ -12,7 +12,7 @@ module Verifactu
       raise ArgumentError, "remisionRequerimiento must be an instance of RemisionRequerimiento or nil" unless remisionRequerimiento.nil? || remisionRequerimiento.is_a?(RemisionRequerimiento)
       raise ArgumentError, "remisionVoluntaria must be an instance of RemisionVoluntaria or nil" unless remisionVoluntaria.nil? || remisionVoluntaria.is_a?(RemisionVoluntaria)
 
-
+      raise ArgumentError, "ID VERSION NO ES UNA VERSION ACEPTADA POR VERIFACTU" unless Verifactu::Config::L15.include?(Verifactu::Config::ID_VERSION)
       @id_version = Verifactu::Config::ID_VERSION
 
       @obligado_emision = obligado_emision # Instancia de PersonaFisicaJuridica
