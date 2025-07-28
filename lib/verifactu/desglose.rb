@@ -47,31 +47,33 @@ module Verifactu
           # La validacion de tipo impositivo por fecha se realiza en el validador de factura
 
           raise ArgumentError, "#{error_message}, tipo_recargo_equivalencia debe ser uno de #{Verifactu::Config::TIPO_RECARGO_EQUIVALENCIA.join(', ')} o nil" unless tipo_recargo_equivalencia.nil? || Verifactu::Config::TIPO_RECARGO_EQUIVALENCIA.include?(tipo_recargo_equivalencia)
-          error_message += ", tipo_impositivo es #{tipo_impositivo}"
-          case tipo_impositivo
-          when "21"
-            valid_impuestos = ["5.2", "1.75"]
-            raise ArgumentError, "#{error_message}, tipo_recargo_equivalencia debe ser uno de #{valid_impuestos.join(', ')}" unless valid_impuestos.include?(tipo_recargo_equivalencia)
-          when "10"
-            valid_impuestos = ["1.4"]
-            raise ArgumentError, "#{error_message}, tipo_recargo_equivalencia debe ser uno de #{valid_impuestos.join(', ')}" unless valid_impuestos.include?(tipo_recargo_equivalencia)
-          when "7.5"
-            valid_impuestos = ["1"]
-            raise ArgumentError, "#{error_message}, tipo_recargo_equivalencia debe ser uno de #{valid_impuestos.join(', ')}" unless valid_impuestos.include?(tipo_recargo_equivalencia)
-          when "5"
-            valid_impuestos = ["0.5", "0.62"]
-            raise ArgumentError, "#{error_message}, tipo_recargo_equivalencia debe ser uno de #{valid_impuestos.join(', ')}" unless valid_impuestos.include?(tipo_recargo_equivalencia)
-          when "4"
-            valid_impuestos = ["0.5"]
-            raise ArgumentError, "#{error_message}, tipo_recargo_equivalencia debe ser uno de #{valid_impuestos.join(', ')}" unless valid_impuestos.include?(tipo_recargo_equivalencia)
-          when "2"
-            valid_impuestos = ["0.26"]
-            raise ArgumentError, "#{error_message}, tipo_recargo_equivalencia debe ser uno de #{valid_impuestos.join(', ')}" unless valid_impuestos.include?(tipo_recargo_equivalencia)
-          when "0"
-            valid_impuestos = Verifactu::Config::TIPO_RECARGO_EQUIVALENCIA
-            raise ArgumentError, "#{error_message}, tipo_recargo_equivalencia debe ser uno de #{valid_impuestos.join(', ')}" unless valid_impuestos.include?(tipo_recargo_equivalencia)
-          else
-            raise ArgumentError, "tipo_impositivo debe ser uno de #{Verifactu::Config::TIPO_IMPOSITIVO.join(', ')}"
+          if tipo_recargo_equivalencia || tipo_recargo_equivalencia != "0"
+            error_message += ", tipo_impositivo es #{tipo_impositivo}"
+            case tipo_impositivo
+            when "21"
+              valid_impuestos = ["5.2", "1.75"]
+              raise ArgumentError, "#{error_message}, y existe tipo_recargo_equivalencia, este debe ser uno de #{valid_impuestos.join(', ')}" unless valid_impuestos.include?(tipo_recargo_equivalencia)
+            when "10"
+              valid_impuestos = ["1.4"]
+              raise ArgumentError, "#{error_message}, y existe tipo_recargo_equivalencia, este debe ser uno de #{valid_impuestos.join(', ')}" unless valid_impuestos.include?(tipo_recargo_equivalencia)
+            when "7.5"
+              valid_impuestos = ["1"]
+              raise ArgumentError, "#{error_message}, y existe tipo_recargo_equivalencia, este debe ser uno de #{valid_impuestos.join(', ')}" unless valid_impuestos.include?(tipo_recargo_equivalencia)
+            when "5"
+              valid_impuestos = ["0.5", "0.62"]
+              raise ArgumentError, "#{error_message}, y existe tipo_recargo_equivalencia, este debe ser uno de #{valid_impuestos.join(', ')}" unless valid_impuestos.include?(tipo_recargo_equivalencia)
+            when "4"
+              valid_impuestos = ["0.5"]
+              raise ArgumentError, "#{error_message}, y existe tipo_recargo_equivalencia, este debe ser uno de #{valid_impuestos.join(', ')}" unless valid_impuestos.include?(tipo_recargo_equivalencia)
+            when "2"
+              valid_impuestos = ["0.26"]
+              raise ArgumentError, "#{error_message}, y existe tipo_recargo_equivalencia, este debe ser uno de #{valid_impuestos.join(', ')}" unless valid_impuestos.include?(tipo_recargo_equivalencia)
+            when "0"
+              valid_impuestos = Verifactu::Config::TIPO_RECARGO_EQUIVALENCIA
+              raise ArgumentError, "#{error_message}, y existe tipo_recargo_equivalencia, este debe ser uno de #{valid_impuestos.join(', ')}" unless valid_impuestos.include?(tipo_recargo_equivalencia)
+            else
+              raise ArgumentError, "tipo_impositivo debe ser uno de #{Verifactu::Config::TIPO_IMPOSITIVO.join(', ')}"
+            end
           end
         elsif calificacion_operacion == "N1" || calificacion_operacion == "N2"
           raise ArgumentError, "#{error_message}, tipo_impositivo debe ser nil" unless tipo_impositivo.nil?

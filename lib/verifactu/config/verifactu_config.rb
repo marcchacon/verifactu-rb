@@ -4,7 +4,7 @@ module Verifactu
         # Actualizado para version 1.0.9 del documento de validación de errores.
         # Se ha añadido el valor 20 a L8B: Operaciones sujetas al IPSI
         # (https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/VERI-FACTU/DsRegistroVeriFactu.xlsx)
-        L1 = ['01', '02', '03']
+        L1 = ['01', '02', '03', '05']
         L2 = ['F1', 'F2', 'F3', 'R1', 'R2', 'R3', 'R4', 'R5']
         L3 = ['S', 'I']
         L4 = ['S', 'N']
