@@ -91,13 +91,13 @@ module Verifactu
     end
 
     def con_tercero_con_nif(nombre_razon, identificacion)
-      @tercero = Verifactu::PersonaFisicaJuridica.new(nombre_razon: nombre_razon, nif: identificacion)
+      @tercero = Verifactu::PersonaFisicaJuridica.create_from_nif(nombre_razon: nombre_razon, nif: identificacion)
       self
     end
 
     def con_tercero_con_id_otro(nombre_razon, codigo_pais, id_type, id)
       @id_otro = Verifactu::IDOtro.new(codigo_pais: codigo_pais, id_type: id_type, id: id)
-      @tercero = Verifactu::PersonaFisicaJuridica.new(nombre_razon: nombre_razon, id_otro: @id_otro)
+      @tercero = Verifactu::PersonaFisicaJuridica.create_from_id_otro(nombre_razon: nombre_razon, id_otro: @id_otro)
       self
     end
 
