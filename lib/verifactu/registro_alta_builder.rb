@@ -90,7 +90,7 @@ module Verifactu
       self
     end
 
-    def con_tercero_con_nif(nombre_razon, identificacion])
+    def con_tercero_con_nif(nombre_razon, identificacion)
       @tercero = Verifactu::PersonaFisicaJuridica.new(nombre_razon: nombre_razon, nif: identificacion)
       self
     end
@@ -101,7 +101,7 @@ module Verifactu
       self
     end
 
-    
+
 
   end
 end
