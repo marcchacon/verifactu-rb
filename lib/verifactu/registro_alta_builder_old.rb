@@ -1,12 +1,8 @@
 module Verifactu
-  class FacturaBuilder
+  class RegistroAltaBuilder
     def initialize
-      @lineas = []
-    end
+      @destinatarios = []
 
-    def con_id_version(valor)
-      @id_version = valor
-      self
     end
 
     def con_tipo_registro_sif(valor)
