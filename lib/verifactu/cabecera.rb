@@ -9,7 +9,7 @@ module Verifactu
       raise ArgumentError, "obligado_emision debe tener un NIF" if obligado_emision.nif.nil? || obligado_emision.nif.empty?
 
 
-      raise ArgumentError, "representante must be an instance of Representante or nil" unless representante.nil? || representante.is_a?(PersonaFisicaJuridica)
+      raise ArgumentError, "representante must be an instance of PersonaFisicaJuridica or nil" unless representante.nil? || representante.is_a?(PersonaFisicaJuridica)
       raise ArgumentError, "representante debe tener un NIF" if representante && (representante.nif.nil? || representante.nif.empty?)
 
       raise ArgumentError, "remision_requerimiento must be an instance of RemisionRequerimiento or nil" unless remision_requerimiento.nil? || remision_requerimiento.is_a?(RemisionRequerimiento)
@@ -19,7 +19,7 @@ module Verifactu
       @id_version = Verifactu::Config::ID_VERSION
 
       @obligado_emision = obligado_emision # Instancia de PersonaFisicaJuridica
-      @representante = representante # Instancia de Representante
+      @representante = representante # Instancia de PersonaFisicaJuridica
 
       @remision_requerimiento = remision_requerimiento # Instancia de RemisionRequerimiento
       @remision_voluntaria = remision_voluntaria # Instancia de RemisionVoluntaria
