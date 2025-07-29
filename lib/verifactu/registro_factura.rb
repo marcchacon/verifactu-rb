@@ -11,12 +11,15 @@ module Verifactu
       raise ArgumentError, "registros no puede estar vacío" if registros.empty?
       raise ArgumentError, "registros no puede tener más de 1000 elementos" if registros.size > 1000
 
+      # He interpretado que un envio puede tener ambos tipos de registros.
+      # Se puede interpretar que un envio solo puede tener registros de alta o anulacion, pero no ambos.
+      # Si se quiere restringir a un solo tipo, hay que refactorizar esto.
       invalid_registro = registros.each_with_index.find { |registro, index| !registro.is_a?(RegistroAlta) && !registro.is_a?(RegistroAnulacion) }
       if invalid_registro
         registro, index = invalid_registro
         raise ArgumentError, "El registro en la posición #{index} no es una instancia de RegistroAlta o RegistroAnulacion (#{registro.class})"
       end
-º
+
       @registros_alta = []
       @registros_anulacion = []
       @numero_registros = 0
