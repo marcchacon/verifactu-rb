@@ -10,7 +10,7 @@ module Verifactu
     :base_imponible_a_coste,
     :cuota_repercutida,
     :tipo_recargo_equivalencia,
-    :cuota_recargo_equivalencia,
+    :cuota_recargo_equivalencia
 
     #
     # TODO Separar en dos constructores, uno para operaciones y otro para exentas
@@ -156,7 +156,7 @@ module Verifactu
     # Validación de tipo recargo equivalencia
     # Asume que impuesto es IVA y calificacion_operacion es S1
     def validar_tipo_recargo_equivalencia(tipo_recargo_equivalencia:, tipo_impositivo:, error_message: "")
-      if tipo_recargo_equivalencia.nil? || tipo_recargo_equivalencia != "0"
+      unless tipo_recargo_equivalencia.nil? || tipo_recargo_equivalencia == "0"
         error_message += ", tipo_impositivo es #{tipo_impositivo}, y existe tipo_recargo_equivalencia, este debe ser uno de"
 
         case tipo_impositivo

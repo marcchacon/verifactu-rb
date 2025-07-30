@@ -7,7 +7,7 @@ module Verifactu
       @factura_substituida = []
       @subsanacion = 'N'
       @rechazo_previo = 'N'
-      @descripcion = VERIFACTU::Config::DESCRIPCION_OPERACION_DEFECTO
+      @descripcion = Verifactu::Config::DESCRIPCION_OPERACION_DEFECTO
       @macrodato = 'N'
       @cupon = 'N'
       @emitida_por_tercero_o_destinatario = 'N'
@@ -121,7 +121,9 @@ module Verifactu
     end
 
     #TODO
-    def agregar_desglose_operacion()
+    def agregar_desglose_operacion(desglose)
+      @desglose << desglose
+      self
     end
 
     def con_cuota_total(cuota_total)
@@ -174,34 +176,34 @@ module Verifactu
     def build()
       Verifactu::RegistroAlta.new(
         id_factura: @id_factura,
-              ref_externa: @ref_externa, 
-              nombre_razon_emisor: @nombre_razon_emisor,
-              subsanacion: @subsanacion,
-              rechazo_previo: @rechazo_previo,
-              tipo_factura: @tipo_factura,
-              tipo_rectificativa: @tipo_rectificativa,
-              facturas_rectificativas: @facturas_rectificativas,
-              facturas_sustituidas: @facturas_sustituidas,
-              importe_rectificacion: @importe_rectificacion,
-              fecha_operacion: @fecha_operacion,
-              descripcion_operacion: @descripcion_operacion,
-              factura_simplificada_Art7273: @factura_simplificada_Art7273,
-              factura_sin_identif_destinatario_art61d: @factura_sin_identif_destinatario_Art61d,
-              macrodato: @macrodato,
-              emitida_por_tercero_o_destinatario: @emitida_por_tercero_o_destinatario,
-              tercero: @tercero,
-              destinatarios: @destinatarios,
-              cupon: @cupon, 
-              desglose: @desglose,
-              cuota_total: @cuota_total,
-              importe_total: @importe_total, 
-              sistema_informatico: @sistema_informatico,
-              fecha_hora_huso_gen_registro: @fecha_hora_huso_gen_registro, 
-              num_registro_acuerdo_facturacion: @num_registro_acuerdo_facturacion,
-              id_acuerdo_sistema_informatico: @id_acuerdo_sistema_informatico,
-              tipo_huella: @tipo_huella,
-              huella: @huella,
-              signature: @signature
+        ref_externa: @ref_externa, 
+        nombre_razon_emisor: @nombre_razon_emisor,
+        subsanacion: @subsanacion,
+        rechazo_previo: @rechazo_previo,
+        tipo_factura: @tipo_factura,
+        tipo_rectificativa: @tipo_rectificativa,
+        facturas_rectificativas: @facturas_rectificativas,
+        facturas_sustituidas: @facturas_sustituidas,
+        importe_rectificacion: @importe_rectificacion,
+        fecha_operacion: @fecha_operacion,
+        descripcion_operacion: @descripcion_operacion,
+        factura_simplificada_Art7273: @factura_simplificada_Art7273,
+        factura_sin_identif_destinatario_art61d: @factura_sin_identif_destinatario_Art61d,
+        macrodato: @macrodato,
+        emitida_por_tercero_o_destinatario: @emitida_por_tercero_o_destinatario,
+        tercero: @tercero,
+        destinatarios: @destinatarios,
+        cupon: @cupon, 
+        desglose: @desglose,
+        cuota_total: @cuota_total,
+        importe_total: @importe_total, 
+        sistema_informatico: @sistema_informatico,
+        fecha_hora_huso_gen_registro: @fecha_hora_huso_gen_registro, 
+        num_registro_acuerdo_facturacion: @num_registro_acuerdo_facturacion,
+        id_acuerdo_sistema_informatico: @id_acuerdo_sistema_informatico,
+        tipo_huella: @tipo_huella,
+        huella: @huella,
+        signature: @signature
       )
 
     end
