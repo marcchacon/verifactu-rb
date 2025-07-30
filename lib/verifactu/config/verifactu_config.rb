@@ -2,7 +2,7 @@ module Verifactu
     module Config
         # Listas de valores permitidos para los campos
         # Actualizado para version 1.0.9 del documento de validación de errores.
-        # Se ha añadido el valor 20 a L8B: Operaciones sujetas al IPSI
+        # Se ha añadido el valor 20 y 21 a L8B: Operaciones sujetas al IPSI
         # (https://www.agenciatributaria.es/static_files/AEAT_Desarrolladores/EEDD/IVA/VERI-FACTU/DsRegistroVeriFactu.xlsx)
         L1 = ['01', '02', '03', '05']
         L2 = ['F1', 'F2', 'F3', 'R1', 'R2', 'R3', 'R4', 'R5']
@@ -29,6 +29,7 @@ module Verifactu
         PAISES_PERMITIDOS = ['DE', 'AT', 'BE', 'CY', 'CZ', 'HR', 'DK', 'SK', 'SI', 'ES', 'EE', 'FI', 'FR', 'EL', 'GB', 'XI', 'NL', 'HU', 'IT', 'IE', 'LV', 'LT', 'LU', 'MT', 'PL', 'PT', 'SE', 'BG', 'RO']
         TIPO_IMPOSITIVO = ["0", "2", "4", "5", "7.5", "10", "21"]
         TIPO_RECARGO_EQUIVALENCIA = ["0", "0.26", "0.5", "0.62", "1", "1.4", "1.75", "5.2"]
+        
         ID_VERSION = ENV['VERIFACTU_ID_VERSION'] || L15.first
         DESCRIPCION_OPERACION_DEFECTO = ENV["VERIFACTU_DESCRIPCION_OPERACION"] || "Factura Cliente"
 

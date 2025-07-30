@@ -8,6 +8,9 @@ module Verifactu
       @subsanacion = 'N'
       @rechazo_previo = 'N'
       @descripcion = VERIFACTU::Config::DESCRIPCION_OPERACION_DEFECTO
+      @macrodato = 'N'
+      @cupon = 'N'
+      @emitida_por_tercero_o_destinatario = 'N'
     end
 
     def con_id_factura(id_emisor, num_serie, fecha_expedicion)
@@ -101,6 +104,21 @@ module Verifactu
       self
     end
 
+    def agregar_destinatario_nif(nombre_razon, nif)
+      @destinatarios << Verifactu::PersonaFisicaJuridica.create_from_nif(nombre_razon: nombre_razon, nif: nif)
+      self
+    end
+
+    def agregar_destinatario_id_otro(nombre_razon, codigo_pais, id_type, id)
+      id_otro = Verifactu::IDOtro.new(codigo_pais: codigo_pais, id_type: id_type, id: id)
+      @destinatarios << Verifactu::PersonaFisicaJuridica.create_from_id_otro(nombre_razon: nombre_razon, id_otro: id_otro)
+      self
+    end
+
+    def tiene_cupon(valor = 'S')
+      @cupon = valor
+      self
+    end
 
 
   end
