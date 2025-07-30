@@ -16,7 +16,7 @@ module Verifactu
       raise ArgumentError, "num_serie_factura debe tener maximo 60 caracteres" if num_serie_factura.length > 60
 
       Helper::Validador.validar_fecha_pasada(fecha_expedicion_factura)
-      raise ArgumentError, "fecha_expedicion_factura no debe ser inferior a 28/10/2024" if fecha_expedicion_factura < Date.new(2024, 10, 28)
+      raise ArgumentError, "fecha_expedicion_factura no debe ser inferior a 28/10/2024" if Date.strptime(fecha_expedicion_factura, '%d-%m-%Y') < Date.new(2024, 10, 28)
       # Si Impuesto = “01” (IVA), “03” (IGIC) o no se cumplimenta (considerándose “01” - IVA), la
       # FechaExpedicionFactura solo puede ser anterior a la FechaOperacion, si ClaveRegimen = "14" o "15”.
       
