@@ -1,3 +1,5 @@
+require 'date'
+
 module Verifactu
   module Helper
     class Validador

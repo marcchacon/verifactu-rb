@@ -14,7 +14,7 @@ module Verifactu
     end
 
     def con_id_factura(id_emisor, num_serie, fecha_expedicion)
-      @id_factura = Verifactu::IDFactura.new(id_emisor: id_emisor, num_serie: num_serie, fecha_expedicion: fecha_expedicion)
+      @id_factura = Verifactu::IDFactura.new(id_emisor_factura: id_emisor, num_serie_factura: num_serie, fecha_expedicion_factura: fecha_expedicion)
       self
     end
 
