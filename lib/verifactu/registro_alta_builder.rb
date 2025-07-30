@@ -120,6 +120,90 @@ module Verifactu
       self
     end
 
+    #TODO
+    def agregar_desglose_operacion()
+    end
 
+    def con_cuota_total(cuota_total)
+      @cuota_total = cuota_total
+      self
+    end
+
+    def con_importe_total(importe_total)
+      @importe_total = importe_total
+      self
+    end
+
+    def primer_registro(valor = 'S')
+      @primer_registro = valor
+      self
+    end
+
+    def con_encadenamiento(id_emisor, num_serie_factura, fecha_expedicion, huella)
+      @encadenamiento = Verifactu::Encadenamiento.new(id_emisor_factura: id_emisor, num_serie_factura: num_serie_factura, fecha_expedicion: fecha_expedicion, huella: huella)
+      self
+    end
+
+    def con_sistema_informatico(nombre_razon, nif, nombre_sistema_informatico, id_sistema_informatico, version, numero_instalacion,
+                   tipo_uso_posible_solo_verifactu, tipo_uso_posible_multi_ot, indicador_multi_ot)
+      @sistema_informatico = Verifactu::SistemaInformatico.new(nombre_razon: nombre_razon, nif: nif, nombre_sistema_informatico: nombre_sistema_informatico, id_sistema_informatico: id_sistema_informatico, version: version, numero_instalacion: numero_instalacion,
+                   tipo_uso_posible_solo_verifactu: tipo_uso_posible_solo_verifactu, tipo_uso_posible_multi_ot: tipo_uso_posible_multi_ot, indicador_multi_ot: indicador_multi_ot)
+      self
+    end
+
+    def con_fecha_hora_huso_gen_registro(fecha_hora_huso_registro)
+      @fecha_hora_huso_registro = fecha_hora_huso_registro
+      self
+    end
+
+    def con_id_acuerdo_sistema_informatico(id_acuerdo_sistema_informatico)
+      @id_acuerdo_sistema_informatico = id_acuerdo_sistema_informatico
+      self
+    end
+
+    def con_tipo_huella(tipo_huella)
+      @tipo_huella = tipo_huella
+      self
+    end
+
+    def con_signature(signature)
+      @signature = signature
+      self
+    end
+
+    def build()
+      Verifactu::RegistroAlta.new(
+        id_factura: @id_factura,
+              ref_externa: @ref_externa, 
+              nombre_razon_emisor: @nombre_razon_emisor,
+              subsanacion: @subsanacion,
+              rechazo_previo: @rechazo_previo,
+              tipo_factura: @tipo_factura,
+              tipo_rectificativa: @tipo_rectificativa,
+              facturas_rectificativas: @facturas_rectificativas,
+              facturas_sustituidas: @facturas_sustituidas,
+              importe_rectificacion: @importe_rectificacion,
+              fecha_operacion: @fecha_operacion,
+              descripcion_operacion: @descripcion_operacion,
+              factura_simplificada_Art7273: @factura_simplificada_Art7273,
+              factura_sin_identif_destinatario_art61d: @factura_sin_identif_destinatario_Art61d,
+              macrodato: @macrodato,
+              emitida_por_tercero_o_destinatario: @emitida_por_tercero_o_destinatario,
+              tercero: @tercero,
+              destinatarios: @destinatarios,
+              cupon: @cupon, 
+              desglose: @desglose,
+              cuota_total: @cuota_total,
+              importe_total: @importe_total, 
+              sistema_informatico: @sistema_informatico,
+              fecha_hora_huso_gen_registro: @fecha_hora_huso_gen_registro, 
+              num_registro_acuerdo_facturacion: @num_registro_acuerdo_facturacion,
+              id_acuerdo_sistema_informatico: @id_acuerdo_sistema_informatico,
+              tipo_huella: @tipo_huella,
+              huella: @huella,
+              signature: @signature
+      )
+
+    end
   end
 end
