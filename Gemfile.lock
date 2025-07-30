@@ -25,6 +25,7 @@ GEM
 PLATFORMS
   arm64-darwin-22
   ruby
+  x64-mingw-ucrt
 
 DEPENDENCIES
   rake (~> 13.0)
