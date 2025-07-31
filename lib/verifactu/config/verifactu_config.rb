@@ -23,7 +23,6 @@ module Verifactu
         L3 = ['S', # Por sustitución
               'I'] # Por diferencia
         L4 = ['S', 'N']
-        L4E = ['D', 'T'] # Emitida por tercero o destinatario
         L5 = ['S', 'N']
         L6 = ['D', 'T']
         L7 = ['02', '03', '04', '05', '06', '07']
