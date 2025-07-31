@@ -2,6 +2,7 @@ require_relative "verifactu/config/verifactu_config"
 require_relative "verifactu/helpers/validador"
 require_relative "verifactu/helpers/generar_huella_registro_alta"
 
+require_relative "verifactu/reg_factu_sistema_facturacion"
 require_relative "verifactu/cabecera"
 require_relative "verifactu/detalle_desglose"
 require_relative "verifactu/encadenamiento"
@@ -16,5 +17,7 @@ require_relative "verifactu/registro_factura"
 require_relative "verifactu/remision_requerimiento"
 require_relative "verifactu/remision_voluntaria"
 require_relative "verifactu/sistema_informatico"
+
+require_relative "verifactu/reg_factu_sistema_facturacion_xml_builder"
 
 require_relative "verifactu/version"
