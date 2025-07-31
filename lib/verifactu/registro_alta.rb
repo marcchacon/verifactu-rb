@@ -57,6 +57,7 @@ module Verifactu
                    desglose:,
                    cuota_total: nil,
                    importe_total:,
+                   encadenamiento: nil,
                    sistema_informatico:,
                    fecha_hora_huso_gen_registro:,
                    num_registro_acuerdo_facturacion: nil,
@@ -335,12 +336,16 @@ module Verifactu
         # TODO verificar que exista en la AEAT
       end
 
+      # Validaciones de encadenamiento
+      raise ArgumentError, "encadenamiento es obligatorio" if encadenamiento.nil?
+      raise ArgumentError, "encadenamiento debe ser una instancia de Encadenamiento" unless encadenamiento.is_a?(Encadenamiento)
+
       # Validaciones de tipo_huella
       raise ArgumentError, "tipo_huella is required" if tipo_huella.nil?
       raise ArgumentError, "tipo_huella debe estar entre #{Verifactu::Config::L12.join(', ')}" unless Verifactu::Config::L12.include?(tipo_huella.upcase)
 
       # Validaciones de huella
-      #raise ArgumentError, "huella is required" if huella.nil?
+      raise ArgumentError, "huella is required" if huella.nil?
       # TODO: Verificar que huella cumple con los requisitos del documento Especificaciones técnicas para generación de la huella o «hash» de los registros de facturación
 
       # Validaciones de signature
@@ -373,7 +378,7 @@ module Verifactu
       @desglose = desglose # Array de instancias de Desglose
       @cuota_total = cuota_total
       @importe_total = importe_total
-      @encadenamiento = Verifactu::Helper::Encadenamiento.generar_encadenamiento()
+      @encadenamiento = encadenamiento
       @sistema_informatico = sistema_informatico # Instancia de SistemaInformatico
       @fecha_hora_huso_gen_registro = fecha_hora_huso_gen_registro
       @num_registro_acuerdo_facturacion = num_registro_acuerdo_facturacion

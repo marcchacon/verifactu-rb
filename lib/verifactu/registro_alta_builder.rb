@@ -179,8 +179,18 @@ module Verifactu
       self
     end
 
-    def con_encadenamiento(id_emisor, num_serie_factura, fecha_expedicion, huella)
-      @encadenamiento = Verifactu::Encadenamiento.new(id_emisor_factura: id_emisor, num_serie_factura: num_serie_factura, fecha_expedicion: fecha_expedicion, huella: huella)
+    def con_encadenamiento_primer_registro
+      @encadenamiento = Verifactu::Encadenamiento.crea_encadenamiento_primer_registro
+      self
+    end
+
+    def con_encadenamiento_registro_anterior(id_emisor, num_serie_factura, fecha_expedicion, huella_anterior)
+      @encadenamiento = Verifactu::Encadenamiento.crea_encadenamiento_registro_anterior(
+        id_emisor_factura: id_emisor,
+        num_serie_factura: num_serie_factura,
+        fecha_expedicion: fecha_expedicion,
+        huella: huella_anterior
+      )
       self
     end
 
@@ -203,6 +213,11 @@ module Verifactu
 
     def con_tipo_huella(tipo_huella)
       @tipo_huella = tipo_huella
+      self
+    end
+
+    def con_huella(huella)
+      @huella = huella
       self
     end
 
@@ -235,6 +250,7 @@ module Verifactu
         desglose: @desglose,
         cuota_total: @cuota_total,
         importe_total: @importe_total,
+        encadenamiento: @encadenamiento,
         sistema_informatico: @sistema_informatico,
         fecha_hora_huso_gen_registro: @fecha_hora_huso_gen_registro,
         num_registro_acuerdo_facturacion: @num_registro_acuerdo_facturacion,

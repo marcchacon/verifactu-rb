@@ -4,6 +4,19 @@ RSpec.describe Verifactu::RegistroAltaBuilder do
   describe '.build_standa' do
 
     it 'crea una factura ordinaria' do
+
+      # Genera la huella para el registro de alta de una factura
+      huella = Verifactu::Helper::GenerarHuellaRegistroAlta.execute(
+                id_emisor_factura: 'B02838894',
+                num_serie_factura: 'NC202500051',
+                fecha_expedicion_factura: '22-07-2025',
+                tipo_factura: 'F1',
+                cuota_total: '55.54',
+                importe_total: '320.00',
+                huella: nil, # En blanco para el primer registro (debería registrar la huella para el siguiente)
+                fecha_hora_huso_gen_registro: '2025-07-22T10:00:00+02:00'
+              )
+
       # Crea una factura de alta con los datos necesarios
       factura = Verifactu::RegistroAltaBuilder.new
         .con_id_factura('B02838894', 'NC202500051', '22-07-2025')
@@ -20,6 +33,7 @@ RSpec.describe Verifactu::RegistroAltaBuilder do
                                   cuota_repercutida: '55.54') # Uno por cada tipo de IVA con base imponible
         .con_cuota_total('55.54')
         .con_importe_total('320.00')
+        .con_encadenamiento_primer_registro # Primer registro de encadenamiento
         .con_sistema_informatico(nombre_razon: 'Mi empresa SL',
                                  nif: 'B02838894',
                                  nombre_sistema_informatico: 'Mi sistema',
@@ -31,6 +45,7 @@ RSpec.describe Verifactu::RegistroAltaBuilder do
                                  indicador_multi_ot: 'S')
         .con_fecha_hora_huso_gen_registro('2025-07-22T10:00:00+02:00')
         .con_tipo_huella('01')
+        .con_huella(huella)
         .build
 
       expect(factura).to be_a(Verifactu::RegistroAlta)
