@@ -118,6 +118,32 @@ module Verifactu
       descripcion_operacion_element.content = registro.descripcion_operacion
       registro_alta_element.add_child(descripcion_operacion_element)
 
+      # Agregar tercero (es el presentador)
+      if registro.tercero
+        tercero_element = Nokogiri::XML::Node.new('sum1:Tercero', xml_document)
+        tercero_nombre_razon_element = Nokogiri::XML::Node.new('sum1:NombreRazon', xml_document)
+        tercero_nombre_razon_element.content = registro.tercero.nombre_razon
+        tercero_element.add_child(tercero_nombre_razon_element)
+        tercero_nif_element = Nokogiri::XML::Node.new('sum1:NIF', xml_document)
+        tercero_nif_element.content = registro.tercero.nif
+        tercero_element.add_child(tercero_nif_element)
+        registro_alta_element.add_child(tercero_element)
+      end
+
+      # Agregar destinatarios
+      destinatarios_element = Nokogiri::XML::Node.new('sum1:Destinatarios', xml_document)
+      registro_alta_element.add_child(destinatarios_element)
+      registro.destinatarios.each do |destinatario|
+        id_destinatario_element = Nokogiri::XML::Node.new('sum1:IDDestinatario', xml_document)
+        nombre_destinatario_element = Nokogiri::XML::Node.new('sum1:NombreRazon', xml_document)
+        nombre_destinatario_element.content = destinatario.nombre_razon
+        id_destinatario_element.add_child(nombre_destinatario_element)
+        nif_destinatario_element = Nokogiri::XML::Node.new('sum1:NIF', xml_document)
+        nif_destinatario_element.content = destinatario.nif
+        id_destinatario_element.add_child(nif_destinatario_element)
+        destinatarios_element.add_child(id_destinatario_element)
+      end
+
       # Agrega Desgloses
       desglose_element = Nokogiri::XML::Node.new('sum1:Desglose', xml_document)
       registro_alta_element.add_child(desglose_element)
