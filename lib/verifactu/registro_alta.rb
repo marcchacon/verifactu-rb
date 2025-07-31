@@ -34,11 +34,11 @@ module Verifactu
                 :signature
 
     def initialize(id_factura:,
-                   ref_externa: nil, 
+                   ref_externa: nil,
                    nombre_razon_emisor:,
                    subsanacion: nil,
-                   rechazo_previo: nil, 
-                   tipo_factura:, 
+                   rechazo_previo: nil,
+                   tipo_factura:,
                    tipo_rectificativa: nil,
                    facturas_rectificativas: nil,
                    facturas_sustituidas: nil,
@@ -51,12 +51,12 @@ module Verifactu
                    emitida_por_tercero_o_destinatario: nil,
                    tercero: nil,
                    destinatarios: nil,
-                   cupon: nil, 
+                   cupon: nil,
                    desglose:,
                    cuota_total: nil,
-                   importe_total:, 
+                   importe_total:,
                    sistema_informatico:,
-                   fecha_hora_huso_gen_registro:, 
+                   fecha_hora_huso_gen_registro:,
                    num_registro_acuerdo_facturacion: nil,
                    id_acuerdo_sistema_informatico: nil,
                    tipo_huella:,
@@ -163,7 +163,7 @@ module Verifactu
       if factura_simplificada_Art7273
         raise ArgumentError, "factura_simplificada_Art7273 debe ser una String" unless factura_simplificada_Art7273.is_a?(String)
         raise ArgumentError, "factura_simplificada_Art7273 debe estar entre #{Verifactu::Config::L4.join(', ')}" unless Verifactu::Config::L4.include?(factura_simplificada_Art7273.upcase)
-        
+
         if factura_simplificada_Art7273 == "S"
           valid_tipo_factura = ["F1", "F3", "R1", "R2", "R3", "R4"]
           raise ArgumentError, "factura_simplificada_Art7273 sólo puede ser 'S' si TipoFactura es uno de los siguientes valores: #{valid_tipo_factura.join(', ')}" unless valid_tipo_factura.include?(tipo_factura)
@@ -174,13 +174,13 @@ module Verifactu
       if factura_sin_identif_destinatario_art61d
         raise ArgumentError, "factura_sin_identif_destinatario_art61d debe ser una String" unless factura_sin_identif_destinatario_art61d.is_a?(String)
         raise ArgumentError, "factura_sin_identif_destinatario_art61d debe estar entre #{Verifactu::Config::L5.join(', ')}" unless Verifactu::Config::L5.include?(factura_sin_identif_destinatario_art61d.upcase)
-        
+
         if factura_sin_identif_destinatario_art61d == "S"
           valid_tipo_factura = ["F2", "R5"]
           raise ArgumentError, "factura_sin_identif_destinatario_art61d sólo puede ser 'S' si TipoFactura es uno de los siguientes valores: #{valid_tipo_factura.join(', ')}" unless valid_tipo_factura.include?(tipo_factura)
         end
       end
-      
+
       # Validaciones de macrodato
       if macrodato
         raise ArgumentError, "macrodato debe ser una String" unless macrodato.is_a?(String)
@@ -190,7 +190,7 @@ module Verifactu
       # Validaciones de emitida_por_tercero_o_destinatario
       if emitida_por_tercero_o_destinatario
         raise ArgumentError, "emitida_por_tercero_o_destinatario debe ser una String" unless emitida_por_tercero_o_destinatario.is_a?(String)
-        raise ArgumentError, "emitida_por_tercero_o_destinatario debe estar entre #{Verifactu::Config::L6.join(', ')}" unless Verifactu::Config::L6.include?(emitida_por_tercero_o_destinatario.upcase)
+        raise ArgumentError, "emitida_por_tercero_o_destinatario debe estar entre #{Verifactu::Config::L4E.join(', ')}" unless Verifactu::Config::L6.include?(emitida_por_tercero_o_destinatario.upcase)
       end
       # Validaciones de tercero (ASIGNACION DE VARIABLE)
       if emitida_por_tercero_o_destinatario == "T"
@@ -231,8 +231,8 @@ module Verifactu
       sum_cuota = 0
       sum_importe_desglose = 0
       desglose.each do |d|
-        raise ArgumentError, "Cada elemento de desglose debe ser una instancia de Desglose" unless d.is_a?(Desglose)
-        if d.impuesto == "01" 
+        raise ArgumentError, "Cada elemento de desglose debe ser una instancia de Desglose" unless d.is_a?(DetalleDesglose)
+        if d.impuesto == "01"
           fecha_factura = Date.parse(fecha_operacion || id_factura.fecha_expedicion_factura, "dd-mm-yyyy")
           case d.tipo_impositivo
           when "5"
@@ -279,14 +279,14 @@ module Verifactu
         end
 
         unless tipo_rectificativa == "I" || tipo_factura == "R2" || tipo_factura == "R3"
-          d.validar_cuota_repercutida()
+          #d.validar_cuota_repercutida()
         end
 
         sum_base_imponible_cuota_repercutida += d.base_imponible_o_importe_no_sujeto.to_f + d.cuota_repercutida.to_f
         sum_cuota += d.cuota_repercutida.to_f + d.cuota_recargo_equivalencia.to_f
 
         clave_regimen_exempta_importe_total = ['03', '05', '06', '08', '09']
-        unless clave_regimen_exempta_importe_total.include?(d.clave_regimen) 
+        unless clave_regimen_exempta_importe_total.include?(d.clave_regimen)
           sum_importe_desglose += d.base_imponible_o_importe_no_sujeto.to_f + d.cuota_repercutida.to_f + d.cuota_recargo_equivalencia.to_f
         end
       end
@@ -302,7 +302,7 @@ module Verifactu
       raise ArgumentError, "cuota_total debe tener maximo 12 digitos antes del decimal y 2 decimales" unless Verifactu::Helper::Validador.validar_digito(cuota_total, digitos: 12)
       diferencia_cuota_total = cuota_total.to_f - sum_cuota
       raise ArgumentError, "Cuota total no coincide con la suma de desgloses: #{cuota_total} - #{sum_cuota} = #{diferencia_cuota_total}" if diferencia_cuota_total.abs > Config::MARGEN_ERROR_CUOTA_TOTAL
-      
+
       # Validaciones de importe_total
       raise ArgumentError, "importe_total is required" if importe_total.nil?
       raise ArgumentError, "importe_total debe tener maximo 12 digitos antes del decimal y 2 decimales" unless Verifactu::Helper::Validador.validar_digito(importe_total, digitos: 12)
@@ -325,14 +325,14 @@ module Verifactu
         raise ArgumentError, "num_registro_acuerdo_facturacion debe tener una longitud máxima de 15 caracteres" if num_registro_acuerdo_facturacion.length > 15
         # TODO verificar que exista en la AEAT
       end
-       
+
       # Validaciones de id_acuerdo_sistema_informatico
       if id_acuerdo_sistema_informatico
         raise ArgumentError, "id_acuerdo_sistema_informatico debe ser una String" unless id_acuerdo_sistema_informatico.is_a?(String)
         raise ArgumentError, "id_acuerdo_sistema_informatico debe tener una longitud máxima de 16 caracteres" if id_acuerdo_sistema_informatico.length > 16
         # TODO verificar que exista en la AEAT
       end
-      
+
       # Validaciones de tipo_huella
       raise ArgumentError, "tipo_huella is required" if tipo_huella.nil?
       raise ArgumentError, "tipo_huella debe estar entre #{Verifactu::Config::L12.join(', ')}" unless Verifactu::Config::L12.include?(tipo_huella.upcase)
@@ -345,7 +345,7 @@ module Verifactu
       if signature
         # TODO: Verificar que signature cumple con formato del "schema", en http://www.w3.org/2000/09/xmldsig#
       end
-      
+
       raise ArgumentError, "ID VERSION NO ES UNA VERSION ACEPTADA POR VERIFACTU" unless Verifactu::Config::L15.include?(Verifactu::Config::ID_VERSION)
 
       @id_version = Verifactu::Config::ID_VERSION

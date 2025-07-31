@@ -2,7 +2,7 @@ module Verifactu
   #
   # It represents the SIF (Sistema de Información Fiscal) class in the Verifactu module.
   #
-  class Sif
+  class SistemaInformatico
     attr_reader :nombre_razon, :nif, :id_otro, :nombre_sistema_informatico,
                 :id_sistema_informatico, :version, :numero_instalacion,
                 :tipo_uso_posible_solo_verifactu, :tipo_uso_posible_multi_ot, :indicador_multi_ot
