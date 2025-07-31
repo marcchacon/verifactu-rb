@@ -191,8 +191,8 @@ module Verifactu
       self
     end
 
-    def con_fecha_hora_huso_gen_registro(fecha_hora_huso_registro)
-      @fecha_hora_huso_registro = fecha_hora_huso_registro
+    def con_fecha_hora_huso_gen_registro(fecha_hora_huso_gen_registro)
+      @fecha_hora_huso_gen_registro = fecha_hora_huso_gen_registro
       self
     end
 
@@ -212,8 +212,6 @@ module Verifactu
     end
 
     def build
-      p "desglosex: #{@desglose.class.name}"
-      p "desglosex: #{@desglose.inspect}"
       Verifactu::RegistroAlta.new(
         id_factura: @id_factura,
         ref_externa: @ref_externa,

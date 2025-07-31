@@ -29,6 +29,8 @@ RSpec.describe Verifactu::RegistroAltaBuilder do
                                  tipo_uso_posible_solo_verifactu: 'S',
                                  tipo_uso_posible_multi_ot: 'S',
                                  indicador_multi_ot: 'S')
+        .con_fecha_hora_huso_gen_registro('2025-07-22T10:00:00+02:00')
+        .con_tipo_huella('01')
         .build
 
       expect(factura).to be_a(Verifactu::RegistroAlta)
