@@ -22,11 +22,37 @@ module Verifactu
         # Tipo de rectificativa
         L3 = ['S', # Por sustitución
               'I'] # Por diferencia
-        L4 = ['S', 'N']
-        L5 = ['S', 'N']
-        L6 = ['D', 'T']
-        L7 = ['02', '03', '04', '05', '06', '07']
-        L8A = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20'] #DESCRIPCIÓN DE LA CLAVE DE RÉGIMEN PARA DESGLOSES DONDE EL IMPUESTO DE APLICACIÓN ES EL IVA
+        L4 = ['S', 'N'] # Si/No
+        L5 = ['S', 'N'] # Si/No
+        L6 = ['D', # Destinatario
+              'T'] # Tercero
+        L7 = ['02', # NIF-IVA
+              '03', # Pasaporte
+              '04', # Documento de identidad extranjero
+              '05', # Certificado de residencia
+              '06', # Otro documento probatorio
+              '07'] # No censado
+        #DESCRIPCIÓN DE LA CLAVE DE RÉGIMEN PARA DESGLOSES DONDE EL IMPUESTO DE APLICACIÓN ES EL IVA
+        L8A = ['01', # Operación de régimen general
+               '02', # Exportación
+               '03', # Operaciones a las que se aplique el régimen especial de bienes usados, objetos de arte, antigüedades y objetos de colección.
+               '04', # Régimen especial del oro de inversión.
+               '05',
+               '06',
+               '07',
+               '08',
+               '09',
+               '10',
+               '11',
+               '12',
+               '13',
+               '14',
+               '15',
+               '16',
+               '17',
+               '18',
+               '19',
+               '20']
         L8B = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21'] #DESCRIPCIÓN DE LA CLAVE DE RÉGIMEN PARA DESGLOSES DONDE EL IMPUESTO DE APLICACIÓN ES EL IGIC
         # Calificación de operación
         L9 = ['S1', # Operación sujeta y no exenta - Sin inversión del sujeto pasivo
