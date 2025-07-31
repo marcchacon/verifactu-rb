@@ -282,7 +282,7 @@ module Verifactu
         end
 
         unless tipo_rectificativa == "I" || tipo_factura == "R2" || tipo_factura == "R3"
-          #d.validar_cuota_repercutida()
+          d.validar_cuota_repercutida
         end
 
         sum_base_imponible_cuota_repercutida += d.base_imponible_o_importe_no_sujeto.to_f + d.cuota_repercutida.to_f

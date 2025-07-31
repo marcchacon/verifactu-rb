@@ -104,6 +104,18 @@ module Verifactu
 
     end
 
+    # Validación de cuota repercutida que debe hacerse excepto si TipoRectificativa = “I” o TipoFactura “R2”, “R3”
+    def validar_cuota_repercutida
+
+      if @cuota_repercutida.to_f * @base_imponible_o_importe_no_sujeto.to_f < 0
+        return false
+      end
+
+      resultado = @base_imponible_o_importe_no_sujeto.to_f * @tipo_impositivo.to_f / 100.0
+      # Tolerancia de +/- 10 euros
+      ((@cuota_repercutida.to_f - resultado).abs <= 10.0)
+    end
+
     private
 
     #
@@ -215,18 +227,6 @@ module Verifactu
           raise ArgumentError, "DetalleDesglose - operacion_exenta debe ser #{Verifactu::Config::L10B.join(', ')}"
         end
       end
-    end
-
-    # Validación de cuota repercutida que debe hacerse excepto si TipoRectificativa = “I” o TipoFactura “R2”, “R3”
-    def self.validar_cuota_repercutida(cuota_repercutida:, tipo_impositivo:, base_imponible_o_importe_no_sujeto:)
-
-      if cuota_repercutida.to_f * base_imponible_o_importe_no_sujeto.to_f < 0
-        return false
-      end
-
-      resultado = base_imponible_o_importe_no_sujeto.to_f * tipo_impositivo.to_f / 100.0
-      # Tolerancia de +/- 10 euros
-      ((cuota_repercutida.to_f - resultado).abs <= 10.0)
     end
 
     # Valida en función de la calificación de operación
