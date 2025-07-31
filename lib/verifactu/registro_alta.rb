@@ -193,7 +193,7 @@ module Verifactu
       # Validaciones de emitida_por_tercero_o_destinatario
       if emitida_por_tercero_o_destinatario
         raise ArgumentError, "emitida_por_tercero_o_destinatario debe ser una String" unless emitida_por_tercero_o_destinatario.is_a?(String)
-        raise ArgumentError, "emitida_por_tercero_o_destinatario debe estar entre #{Verifactu::Config::L4E.join(', ')}" unless Verifactu::Config::L6.include?(emitida_por_tercero_o_destinatario.upcase)
+        raise ArgumentError, "emitida_por_tercero_o_destinatario debe estar entre #{Verifactu::Config::L6.join(', ')}" unless Verifactu::Config::L6.include?(emitida_por_tercero_o_destinatario.upcase)
       end
       # Validaciones de tercero (ASIGNACION DE VARIABLE)
       if emitida_por_tercero_o_destinatario == "T"
