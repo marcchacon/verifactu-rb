@@ -87,7 +87,7 @@ module Verifactu
 
       # Agrega IdVersion
       id_version_element = Nokogiri::XML::Node.new('sum1:IDVersion', xml_document)
-      id_version_element.content = "1.0" # Versión 1.0 de verifactu
+      id_version_element.content = Verifactu::Config::ID_VERSION
       registro_alta_element.add_child(id_version_element)
 
       # Agrega IDFactura
@@ -103,9 +103,117 @@ module Verifactu
       id_factura_element.add_child(fecha_expedicion_element)
       registro_alta_element.add_child(id_factura_element)
 
-      # Agrega otros campos necesarios del registro de alta
-      # ...
+      # Agrega NombreRazonEmisor
+      nombre_razon_emisor_element = Nokogiri::XML::Node.new('sum1:NombreRazonEmisor', xml_document)
+      nombre_razon_emisor_element.content = registro.nombre_razon_emisor
+      registro_alta_element.add_child(nombre_razon_emisor_element)
 
+      # Agrega TipoFactura
+      tipo_factura_element = Nokogiri::XML::Node.new('sum1:TipoFactura', xml_document)
+      tipo_factura_element.content = registro.tipo_factura
+      registro_alta_element.add_child(tipo_factura_element)
+
+      # Agrega DescripcionOperacion
+      descripcion_operacion_element = Nokogiri::XML::Node.new('sum1:DescripcionOperacion', xml_document)
+      descripcion_operacion_element.content = registro.descripcion_operacion
+      registro_alta_element.add_child(descripcion_operacion_element)
+
+      # Agrega Desgloses
+      desglose_element = Nokogiri::XML::Node.new('sum1:Desglose', xml_document)
+      registro_alta_element.add_child(desglose_element)
+
+      registro.desglose.each do |item|
+        item_element = Nokogiri::XML::Node.new('sum1:DetalleDesglose', xml_document)
+        desglose_element.add_child(item_element)
+
+        # Agrega los detalles del desglose
+        item_element.add_child(Nokogiri::XML::Node.new('sum1:Impuesto', xml_document).tap { |e| e.content = item.impuesto })
+        item_element.add_child(Nokogiri::XML::Node.new('sum1:ClaveRegimen', xml_document).tap { |e| e.content = item.clave_regimen })
+        item_element.add_child(Nokogiri::XML::Node.new('sum1:CalificacionOperacion', xml_document).tap { |e| e.content = item.calificacion_operacion })
+        item_element.add_child(Nokogiri::XML::Node.new('sum1:TipoImpositivo', xml_document).tap { |e| e.content = item.tipo_impositivo })
+        item_element.add_child(Nokogiri::XML::Node.new('sum1:BaseImponibleOImporteNoSujeto', xml_document).tap { |e| e.content = item.base_imponible_o_importe_no_sujeto })
+        item_element.add_child(Nokogiri::XML::Node.new('sum1:CuotaRepercutida', xml_document).tap { |e| e.content = item.cuota_repercutida })
+      end
+
+      # Agregar CuotaTotal
+      cuota_total_element = Nokogiri::XML::Node.new('sum1:CuotaTotal', xml_document)
+      cuota_total_element.content = registro.cuota_total
+      registro_alta_element.add_child(cuota_total_element)
+
+      # Agregar ImporteTotal
+      importe_total_element = Nokogiri::XML::Node.new('sum1:ImporteTotal', xml_document)
+      importe_total_element.content = registro.importe_total
+      registro_alta_element.add_child(importe_total_element)
+
+      # Agregar Encadenamiento
+      encadenamiento_element = Nokogiri::XML::Node.new('sum1:Encadenamiento', xml_document)
+      if registro.encadenamiento.primer_registro == 'S'
+        encadenamiento_primer_registro_element = Nokogiri::XML::Node.new('sum1:PrimerRegistro', xml_document)
+        encadenamiento_primer_registro_element.content = registro.encadenamiento.primer_registro
+        encadenamiento_element.add_child(encadenamiento_primer_registro_element)
+      else
+        encadenamiento_registro_anterior_element = Nokogiri::XML::Node.new('sum1:RegistroAnterior', xml_document)
+        encadenamiento_emisor_factura_element = Nokogiri::XML::Node.new('sum1:IDEmisorFactura', xml_document)
+        encadenamiento_emisor_factura_element.content = registro.encadenamiento.id_emisor_factura
+        encadenamiento_registro_anterior_element.add_child(encadenamiento_emisor_factura_element)
+        encadenamiento_num_serie_factura_element = Nokogiri::XML::Node.new('sum1:NumSerieFactura', xml_document)
+        encadenamiento_num_serie_factura_element.content = registro.encadenamiento.num_serie_factura
+        encadenamiento_registro_anterior_element.add_child(encadenamiento_num_serie_factura_element)
+        encadenamiento_fecha_expedicion_element = Nokogiri::XML::Node.new('sum1:FechaExpedicionFactura', xml_document)
+        encadenamiento_fecha_expedicion_element.content = registro.encadenamiento.fecha_expedicion_factura
+        encadenamiento_registro_anterior_element.add_child(encadenamiento_fecha_expedicion_element)
+        encadenamiento_element.add_child(encadenamiento_registro_anterior_element)
+        encadenamiento_huella_element = Nokogiri::XML::Node.new('sum1:Huella', xml_document)
+        encadenamiento_huella_element.content = registro.encadenamiento.huella
+        encadenamiento_element.add_child(encadenamiento_huella_element)
+      end
+      registro_alta_element.add_child(encadenamiento_element)
+
+      # Agregar SistemaInformatico
+      sistema_informatico_element = Nokogiri::XML::Node.new('sum1:SistemaInformatico', xml_document)
+      sistema_informatico_nombre_razon_element = Nokogiri::XML::Node.new('sum1:NombreRazon', xml_document)
+      sistema_informatico_nombre_razon_element.content = registro.sistema_informatico.nombre_razon
+      sistema_informatico_element.add_child(sistema_informatico_nombre_razon_element)
+      sistema_informatico_nif_element = Nokogiri::XML::Node.new('sum1:NIF', xml_document)
+      sistema_informatico_nif_element.content = registro.sistema_informatico.nif
+      sistema_informatico_element.add_child(sistema_informatico_nif_element)
+      sistema_informatico_nombre_sistema_element = Nokogiri::XML::Node.new('sum1:NombreSistemaInformatico', xml_document)
+      sistema_informatico_nombre_sistema_element.content = registro.sistema_informatico.nombre_sistema_informatico
+      sistema_informatico_element.add_child(sistema_informatico_nombre_sistema_element)
+      sistema_informatico_id_element = Nokogiri::XML::Node.new('sum1:IDSistemaInformatico', xml_document)
+      sistema_informatico_id_element.content = registro.sistema_informatico.id_sistema_informatico
+      sistema_informatico_element.add_child(sistema_informatico_id_element)
+      sistema_informatico_version_element = Nokogiri::XML::Node.new('sum1:Version', xml_document)
+      sistema_informatico_version_element.content = registro.sistema_informatico.version
+      sistema_informatico_element.add_child(sistema_informatico_version_element)
+      sistema_informatico_numero_instalacion_element = Nokogiri::XML::Node.new('sum1:NumeroInstalacion', xml_document)
+      sistema_informatico_numero_instalacion_element.content = registro.sistema_informatico.numero_instalacion
+      sistema_informatico_element.add_child(sistema_informatico_numero_instalacion_element)
+      sistema_informatico_tipo_uso_posible_solo_verifactu_element = Nokogiri::XML::Node.new('sum1:TipoUsoPosibleSoloVerifactu', xml_document)
+      sistema_informatico_tipo_uso_posible_solo_verifactu_element.content = registro.sistema_informatico.tipo_uso_posible_solo_verifactu
+      sistema_informatico_element.add_child(sistema_informatico_tipo_uso_posible_solo_verifactu_element)
+      sistema_informatico_tipo_uso_posible_multi_ot_element = Nokogiri::XML::Node.new('sum1:TipoUsoPosibleMultiOT', xml_document)
+      sistema_informatico_tipo_uso_posible_multi_ot_element.content = registro.sistema_informatico.tipo_uso_posible_multi_ot
+      sistema_informatico_element.add_child(sistema_informatico_tipo_uso_posible_multi_ot_element)
+      sistema_informatico_indicador_multi_ot_element = Nokogiri::XML::Node.new('sum1:IndicadorMultiOT', xml_document)
+      sistema_informatico_indicador_multi_ot_element.content = registro.sistema_informatico.indicador_multi_ot
+      sistema_informatico_element.add_child(sistema_informatico_indicador_multi_ot_element)
+      registro_alta_element.add_child(sistema_informatico_element)
+
+      # Agregar FechaHoraHusoGenRegistro
+      fecha_hora_huso_gen_registro_element = Nokogiri::XML::Node.new('sum1:FechaHoraHusoGenRegistro', xml_document)
+      fecha_hora_huso_gen_registro_element.content = registro.fecha_hora_huso_gen_registro
+      registro_alta_element.add_child(fecha_hora_huso_gen_registro_element)
+
+      # Agregar TipoHuella
+      tipo_huella_element = Nokogiri::XML::Node.new('sum1:TipoHuella', xml_document)
+      tipo_huella_element.content = registro.tipo_huella
+      registro_alta_element.add_child(tipo_huella_element)
+
+      # Agregar Huella
+      huella_element = Nokogiri::XML::Node.new('sum1:Huella', xml_document)
+      huella_element.content = registro.huella
+      registro_alta_element.add_child(huella_element)
     end
 
   end

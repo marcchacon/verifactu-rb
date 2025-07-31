@@ -32,7 +32,7 @@ module Verifactu
         text = elements.join('&')
 
         # Generar la huella como un hash SHA256 del texto concatenado
-        Digest::SHA256.hexdigest(text)
+        Digest::SHA256.hexdigest(text).upcase
 
       end
 

@@ -24,7 +24,7 @@ RSpec.describe Verifactu::RegFactuSistemaFacturacionXmlBuilder do
       # Genera el XML
       xml = Verifactu::RegFactuSistemaFacturacionXmlBuilder.build(reg_factu_sistema_facturacion)
 
-      #p "xml:: #{xml.root.to_xml}"
+      p "xml:: #{xml.root.to_xml}"
 
     end
 
