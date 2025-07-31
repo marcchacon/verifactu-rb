@@ -1,6 +1,8 @@
 require_relative "verifactu/config/verifactu_config"
 require_relative "verifactu/helpers/encadenamiento"
 require_relative "verifactu/helpers/validador"
+require_relative "verifactu/helpers/generar_huella_registro_alta"
+
 require_relative "verifactu/cabecera"
 require_relative "verifactu/detalle_desglose"
 require_relative "verifactu/encadenamiento"
