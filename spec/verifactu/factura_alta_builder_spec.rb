@@ -7,7 +7,7 @@ RSpec.describe Verifactu::RegistroAltaBuilder do
 
       # Genera la huella para el registro de alta de una factura
       huella = Verifactu::Helper::GenerarHuellaRegistroAlta.execute(
-                id_emisor_factura: 'B02838894',
+                id_emisor_factura: 'B12345674',
                 num_serie_factura: 'NC202500051',
                 fecha_expedicion_factura: '22-07-2025',
                 tipo_factura: 'F1',
@@ -19,7 +19,7 @@ RSpec.describe Verifactu::RegistroAltaBuilder do
 
       # Crea una factura de alta con los datos necesarios
       factura = Verifactu::RegistroAltaBuilder.new
-        .con_id_factura('B02838894', 'NC202500051', '22-07-2025')
+        .con_id_factura('B12345674', 'NC202500051', '22-07-2025')
         .con_nombre_razon_emisor('Mi empresa SL') # Razón social del emisor
         .con_tipo_factura('F1') # Factura ordinaria
         #.con_fecha_operacion('22-07-2025')
@@ -35,7 +35,7 @@ RSpec.describe Verifactu::RegistroAltaBuilder do
         .con_importe_total('320.00')
         .con_encadenamiento_primer_registro # Primer registro de encadenamiento
         .con_sistema_informatico(nombre_razon: 'Mi empresa SL',
-                                 nif: 'B02838894',
+                                 nif: 'B12345674',
                                  nombre_sistema_informatico: 'Mi sistema',
                                  id_sistema_informatico: 'MB',
                                  version: '1.0.0',
@@ -49,7 +49,7 @@ RSpec.describe Verifactu::RegistroAltaBuilder do
         .build
 
       expect(factura).to be_a(Verifactu::RegistroAlta)
-      expect(factura.id_factura.id_emisor_factura).to eq('B02838894')
+      expect(factura.id_factura.id_emisor_factura).to eq('B12345674')
       expect(factura.id_factura.num_serie_factura).to eq('NC202500051')
       expect(factura.id_factura.fecha_expedicion_factura).to eq('22-07-2025')
       expect(factura.nombre_razon_emisor).to eq('Mi empresa SL')
