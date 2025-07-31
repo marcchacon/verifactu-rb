@@ -34,21 +34,21 @@ RSpec.describe Verifactu::RegistroAltaBuilder do
         .build
 
       expect(factura).to be_a(Verifactu::RegistroAlta)
-      expect(factura.id_factura.id_emisor).to eq('B02838894')
-      expect(factura.id_factura.num_serie).to eq('NC-202500051')
-      expect(factura.id_factura.fecha_expedicion).to eq('22-07-2025')
-      expect(factura.nombre_razon_emisor).to eq('Karyasala SL')
+      expect(factura.id_factura.id_emisor_factura).to eq('B02838894')
+      expect(factura.id_factura.num_serie_factura).to eq('NC202500051')
+      expect(factura.id_factura.fecha_expedicion_factura).to eq('22-07-2025')
+      expect(factura.nombre_razon_emisor).to eq('Mi empresa SL')
       expect(factura.tipo_factura).to eq('F1')
       #expect(factura.fecha_operacion).to eq('22-07-2025')
-      expect(factura.descripcion).to eq('Factura Reserva 2.731 - 22/07/2025 10:00 - 22/10/2025 10:00 - AAA-0009')
-      expect(factura.destinatarios.first.nombre_razon).to eq('Stark, Brad')
+      expect(factura.descripcion_operacion).to eq('Factura Reserva 2.731 - 22/07/2025 10:00 - 22/10/2025 10:00 - AAA-0009')
+      expect(factura.destinatarios.first.nombre_razon).to eq('Brad Stark')
       expect(factura.destinatarios.first.nif).to eq('55555555K')
       expect(factura.desglose.first.clave_regimen).to eq('01')
       expect(factura.desglose.first.calificacion_operacion).to eq('S1')
-      expect(factura.desglose.first.tipo_impositivo).to eq(21.00)
-      expect(factura.desglose.first.base_imponible_o_importe_no_sujeto).to eq(264.46)
-      expect(factura.desglose.first.cuota_repercutida).to eq(55.54)
-      #expect(factura.cuota_total).to eq(55.54)
+      expect(factura.desglose.first.tipo_impositivo).to eq('21')
+      expect(factura.desglose.first.base_imponible_o_importe_no_sujeto).to eq('264.46')
+      expect(factura.desglose.first.cuota_repercutida).to eq('55.54')
+      expect(factura.cuota_total).to eq('55.54')
     end
 
   end

@@ -1,3 +1,5 @@
+require 'bigdecimal'
+
 module Verifactu
   # Representa <sum:RegistroAlta>
   class RegistroAlta
@@ -338,7 +340,7 @@ module Verifactu
       raise ArgumentError, "tipo_huella debe estar entre #{Verifactu::Config::L12.join(', ')}" unless Verifactu::Config::L12.include?(tipo_huella.upcase)
 
       # Validaciones de huella
-      raise ArgumentError, "huella is required" if huella.nil?
+      #raise ArgumentError, "huella is required" if huella.nil?
       # TODO: Verificar que huella cumple con los requisitos del documento Especificaciones técnicas para generación de la huella o «hash» de los registros de facturación
 
       # Validaciones de signature
@@ -380,7 +382,7 @@ module Verifactu
       @huella = huella
       @signature = signature
 
-      if importe_total.abs > 100_000_000.00
+      if BigDecimal(importe_total).abs > 100_000_000.00
         @macrodato = 'S'
       end
     end
