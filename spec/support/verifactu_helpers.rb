@@ -1,8 +1,8 @@
 module VerifactuHelpers
 
   def cabecera_sin_representante
-    Verifactu::Cabecera.new(
-      obligado_emision: Verifactu::PersonaFisicaJuridica.create_from_nif(
+    Verifactu::RegistroFacturacion::Cabecera.new(
+      obligado_emision: Verifactu::RegistroFacturacion::PersonaFisicaJuridica.create_from_nif(
         nombre_razon: 'Mi empresa SL',
         nif: 'B12345674'
       )
@@ -10,12 +10,12 @@ module VerifactuHelpers
   end
 
   def cabecera_con_representante
-    Verifactu::Cabecera.new(
-      obligado_emision: Verifactu::PersonaFisicaJuridica.create_from_nif(
+    Verifactu::RegistroFacturacion::Cabecera.new(
+      obligado_emision: Verifactu::RegistroFacturacion::PersonaFisicaJuridica.create_from_nif(
         nombre_razon: 'Mi empresa SL',
         nif: 'B12345674'
       ),
-      representante: Verifactu::PersonaFisicaJuridica.create_from_nif(
+      representante: Verifactu::RegistroFacturacion::PersonaFisicaJuridica.create_from_nif(
         nombre_razon: 'Representante SL',
         nif: 'B98765432'
       )

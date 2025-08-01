@@ -16,13 +16,11 @@ module Verifactu
     #   reg_factu = Verifactu::RegFactuSistemaFacturacion.new(cabecera: cabecera)
     def initialize(cabecera:, registro:)
       # Validaciones de cabecera
-      raise ArgumentError, "cabecera must be an instance of Cabecera" unless cabecera.is_a?(Cabecera)
+      raise ArgumentError, "cabecera must be an instance of Cabecera" unless cabecera.is_a?(RegistroFacturacion::Cabecera)
       @cabecera = cabecera
       @registro_factura = []
-      if registro.is_a?(RegistroAlta)
+      if registro.is_a?(RegistroFacturacion::RegistroAlta)
         agregar_registro_alta(registro)
-      elsif registro.is_a?(RegistroAnulacion)
-        agregar_registro_anulacion(registro)
       else
         raise ArgumentError, "registro must be an instance of RegistroAlta"
       end
@@ -40,27 +38,9 @@ module Verifactu
     def agregar_registro_alta(registro_alta)
       # Validaciones de registro_alta
       raise ArgumentError, "registro_alta is required" if registro_alta.nil?
-      raise ArgumentError, "registro_alta must be an instance of RegistroAlta" unless registro_alta.is_a?(RegistroAlta)
+      raise ArgumentError, "registro_alta must be an instance of RegistroAlta" unless registro_alta.is_a?(RegistroFacturacion::RegistroAlta)
 
       @registro_factura << registro_alta
-      self
-    end
-
-    # Agrega un registro de anulación al sistema de facturación.
-    # @param [RegistroAnulacion] registro_anulacion Registro de anulación a agregar.
-    # @return [RegFactuSistemaFacturacion] Instancia actual para permitir el encadenamiento de llamadas.
-    # @raise [ArgumentError] Si registro_anulacion no es una instancia de RegistroAnulacion.
-    # @example
-    #   reg_factu = Verifactu::RegFactuSistemaFacturacion.new(cabecera: cabecera)
-    #   reg_factu.agregar_registro_anulacion(registro_anulacion: registro_anulacion)
-    #   # ... realizar otras operaciones ...
-    #   reg_factu
-    def agregar_registro_anulacion(registro_anulacion)
-      # Validaciones de registro_anulacion
-      raise ArgumentError, "registro_anulacion is required" if registro_anulacion.nil?
-      raise ArgumentError, "registro_anulacion must be an instance of RegistroAnulacion" unless registro_anulacion.is_a?(RegistroAnulacion)
-
-      @registro_factura << registro_anulacion
       self
     end
 

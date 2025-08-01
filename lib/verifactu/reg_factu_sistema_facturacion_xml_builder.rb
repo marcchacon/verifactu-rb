@@ -63,12 +63,9 @@ module Verifactu
       xml_document.root.add_child(registro_element)
 
       registro_factura.each do |registro|
-        if registro.is_a?(Verifactu::RegistroAlta)
+        if registro.is_a?(Verifactu::RegistroFacturacion::RegistroAlta)
           # Agrega el registro de alta
           agregar_registro_alta(xml_document, registro_element, registro)
-        elsif registro.is_a?(Verifactu::RegistroAnulacion)
-          # Agrega el registro de anulación
-          agregar_registro_anulacion(xml_document, registro_element, registro)
         else
           raise ArgumentError, "Unsupported registro type: #{registro.class}"
         end

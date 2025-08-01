@@ -18,7 +18,7 @@ module Verifactu
     # Set the IDFactura for the invoice. (required)
     #
     def con_id_factura(id_emisor, num_serie, fecha_expedicion)
-      @id_factura = Verifactu::IDFactura.new(id_emisor_factura: id_emisor,
+      @id_factura = Verifactu::RegistroFacturacion::IDFactura.new(id_emisor_factura: id_emisor,
                                              num_serie_factura: num_serie,
                                              fecha_expedicion_factura: fecha_expedicion)
       self
@@ -65,17 +65,17 @@ module Verifactu
     end
 
     def agregar_factura_rectificada(id_emisor, num_serie, fecha_expedicion)
-      @factura_rectificada << Verifactu::IDFactura.new(id_emisor: id_emisor, num_serie: num_serie, fecha_expedicion: fecha_expedicion)
+      @factura_rectificada << Verifactu::RegistroFacturacion::IDFactura.new(id_emisor: id_emisor, num_serie: num_serie, fecha_expedicion: fecha_expedicion)
       self
     end
 
     def agregar_factura_substituida(id_emisor, num_serie, fecha_expedicion)
-      @factura_substituida << Verifactu::IDFactura.new(id_emisor: id_emisor, num_serie: num_serie, fecha_expedicion: fecha_expedicion)
+      @factura_substituida << Verifactu::RegistroFacturacion::IDFactura.new(id_emisor: id_emisor, num_serie: num_serie, fecha_expedicion: fecha_expedicion)
       self
     end
 
     def con_importe_rectificacion(base_rectificada, cuota_rectificada, cuota_recargo_rectificada = nil)
-      @importe_rectificacion = Verifactu::ImporteRectificacion.new(base_rectificada: base_rectificada, cuota_rectificada: cuota_rectificada, cuota_recargo_rectificada: cuota_recargo_rectificada)
+      @importe_rectificacion = Verifactu::RegistroFacturacion::ImporteRectificacion.new(base_rectificada: base_rectificada, cuota_rectificada: cuota_rectificada, cuota_recargo_rectificada: cuota_recargo_rectificada)
       self
     end
 
@@ -110,24 +110,24 @@ module Verifactu
     end
 
     def con_tercero_con_nif(nombre_razon, identificacion)
-      @tercero = Verifactu::PersonaFisicaJuridica.create_from_nif(nombre_razon: nombre_razon, nif: identificacion)
+      @tercero = Verifactu::RegistroFacturacion::PersonaFisicaJuridica.create_from_nif(nombre_razon: nombre_razon, nif: identificacion)
       self
     end
 
     def con_tercero_con_id_otro(nombre_razon, codigo_pais, id_type, id)
-      @id_otro = Verifactu::IDOtro.new(codigo_pais: codigo_pais, id_type: id_type, id: id)
-      @tercero = Verifactu::PersonaFisicaJuridica.create_from_id_otro(nombre_razon: nombre_razon, id_otro: @id_otro)
+      @id_otro = Verifactu::RegistroFacturacion::IDOtro.new(codigo_pais: codigo_pais, id_type: id_type, id: id)
+      @tercero = Verifactu::RegistroFacturacion::PersonaFisicaJuridica.create_from_id_otro(nombre_razon: nombre_razon, id_otro: @id_otro)
       self
     end
 
     def agregar_destinatario_nif(nombre_razon:, nif:)
-      @destinatarios << Verifactu::PersonaFisicaJuridica.create_from_nif(nombre_razon: nombre_razon, nif: nif)
+      @destinatarios << Verifactu::RegistroFacturacion::PersonaFisicaJuridica.create_from_nif(nombre_razon: nombre_razon, nif: nif)
       self
     end
 
     def agregar_destinatario_id_otro(nombre_razon:, codigo_pais:, id_type:, id:)
-      id_otro = Verifactu::IDOtro.new(codigo_pais: codigo_pais, id_type: id_type, id: id)
-      @destinatarios << Verifactu::PersonaFisicaJuridica.create_from_id_otro(nombre_razon: nombre_razon, id_otro: id_otro)
+      id_otro = Verifactu::RegistroFacturacion::IDOtro.new(codigo_pais: codigo_pais, id_type: id_type, id: id)
+      @destinatarios << Verifactu::RegistroFacturacion::PersonaFisicaJuridica.create_from_id_otro(nombre_razon: nombre_razon, id_otro: id_otro)
       self
     end
 
@@ -143,7 +143,7 @@ module Verifactu
                                  base_imponible_o_importe_no_sujeto:, cuota_repercutida:,
                                  tipo_recargo_equivalencia: nil, cuota_recargo_equivalencia: nil)
 
-      desglose_item = Verifactu::DetalleDesglose.create_operacion(
+      desglose_item = Verifactu::RegistroFacturacion::DetalleDesglose.create_operacion(
                                                 impuesto: impuesto,
                                                 clave_regimen: clave_regimen,
                                                 calificacion_operacion: calificacion_operacion,
@@ -180,12 +180,12 @@ module Verifactu
     end
 
     def con_encadenamiento_primer_registro
-      @encadenamiento = Verifactu::Encadenamiento.crea_encadenamiento_primer_registro
+      @encadenamiento = Verifactu::RegistroFacturacion::Encadenamiento.crea_encadenamiento_primer_registro
       self
     end
 
     def con_encadenamiento_registro_anterior(id_emisor, num_serie_factura, fecha_expedicion, huella_anterior)
-      @encadenamiento = Verifactu::Encadenamiento.crea_encadenamiento_registro_anterior(
+      @encadenamiento = Verifactu::RegistroFacturacion::Encadenamiento.crea_encadenamiento_registro_anterior(
         id_emisor_factura: id_emisor,
         num_serie_factura: num_serie_factura,
         fecha_expedicion: fecha_expedicion,
@@ -196,7 +196,7 @@ module Verifactu
 
     def con_sistema_informatico(nombre_razon:, nif:, nombre_sistema_informatico:, id_sistema_informatico:, version:, numero_instalacion:,
                    tipo_uso_posible_solo_verifactu:, tipo_uso_posible_multi_ot:, indicador_multi_ot:)
-      @sistema_informatico = Verifactu::SistemaInformatico.new(nombre_razon: nombre_razon, nif: nif, nombre_sistema_informatico: nombre_sistema_informatico, id_sistema_informatico: id_sistema_informatico, version: version, numero_instalacion: numero_instalacion,
+      @sistema_informatico = Verifactu::RegistroFacturacion::SistemaInformatico.new(nombre_razon: nombre_razon, nif: nif, nombre_sistema_informatico: nombre_sistema_informatico, id_sistema_informatico: id_sistema_informatico, version: version, numero_instalacion: numero_instalacion,
                    tipo_uso_posible_solo_verifactu: tipo_uso_posible_solo_verifactu, tipo_uso_posible_multi_ot: tipo_uso_posible_multi_ot, indicador_multi_ot: indicador_multi_ot)
       self
     end
@@ -227,7 +227,7 @@ module Verifactu
     end
 
     def build
-      Verifactu::RegistroAlta.new(
+      Verifactu::RegistroFacturacion::RegistroAlta.new(
         id_factura: @id_factura,
         ref_externa: @ref_externa,
         nombre_razon_emisor: @nombre_razon_emisor,

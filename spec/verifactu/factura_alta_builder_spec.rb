@@ -11,13 +11,12 @@ RSpec.describe Verifactu::RegistroAltaBuilder do
       # Crea una factura de alta con los datos necesarios
       factura = registro_alta_factura_valido(huella)
 
-      expect(factura).to be_a(Verifactu::RegistroAlta)
+      expect(factura).to be_a(Verifactu::RegistroFacturacion::RegistroAlta)
       expect(factura.id_factura.id_emisor_factura).to eq('B12345674')
       expect(factura.id_factura.num_serie_factura).to eq('NC202500051')
       expect(factura.id_factura.fecha_expedicion_factura).to eq('22-07-2025')
       expect(factura.nombre_razon_emisor).to eq('Mi empresa SL')
       expect(factura.tipo_factura).to eq('F1')
-      #expect(factura.fecha_operacion).to eq('22-07-2025')
       expect(factura.descripcion_operacion).to eq('Factura Reserva 2.731 - 22/07/2025 10:00 - 22/10/2025 10:00 - AAA-0009')
       expect(factura.destinatarios.first.nombre_razon).to eq('Brad Stark')
       expect(factura.destinatarios.first.nif).to eq('55555555K')
@@ -30,17 +29,5 @@ RSpec.describe Verifactu::RegistroAltaBuilder do
     end
 
   end
-=begin
-  describe '.create_from_id_otro' do
 
-    it 'creates an instance with valid IDOtro' do
-      id_otro = Verifactu::IDOtro.new(codigo_pais: 'FR', id_type: '02', id: '123456789')
-      persona = Verifactu::PersonaFisicaJuridica.create_from_id_otro(nombre_razon: 'Test Name', id_otro: id_otro)
-      expect(persona).to be_a(Verifactu::PersonaFisicaJuridica)
-      expect(persona.nombre_razon).to eq('Test Name')
-      expect(persona.id_otro).to eq(id_otro)
-    end
-
-  end
-=end
 end
