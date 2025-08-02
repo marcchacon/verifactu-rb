@@ -1,4 +1,3 @@
-require 'nokogiri'
 module Verifactu
   #
   # This class is responsible for building the XML representation of a RegistroAlta.
@@ -41,7 +40,7 @@ module Verifactu
       xml_document_root.add_child(id_version_element)
 
       # Agrega IDFactura
-      id_factura_element = Nokogiri::XML::Node.new('sum1:IDFactura>', xml_document_root)
+      id_factura_element = Nokogiri::XML::Node.new('sum1:IDFactura', xml_document_root)
       id_emisor_factura_element = Nokogiri::XML::Node.new('sum1:IDEmisorFactura', xml_document_root)
       id_emisor_factura_element.content = registro.id_factura.id_emisor_factura
       id_factura_element.add_child(id_emisor_factura_element)
@@ -107,7 +106,7 @@ module Verifactu
         item_element.add_child(Nokogiri::XML::Node.new('sum1:ClaveRegimen', xml_document_root).tap { |e| e.content = item.clave_regimen })
         item_element.add_child(Nokogiri::XML::Node.new('sum1:CalificacionOperacion', xml_document_root).tap { |e| e.content = item.calificacion_operacion })
         item_element.add_child(Nokogiri::XML::Node.new('sum1:TipoImpositivo', xml_document_root).tap { |e| e.content = item.tipo_impositivo })
-        item_element.add_child(Nokogiri::XML::Node.new('sum1:BaseImponibleOImporteNoSujeto', xml_document_root).tap { |e| e.content = item.base_imponible_o_importe_no_sujeto })
+        item_element.add_child(Nokogiri::XML::Node.new('sum1:BaseImponibleOimporteNoSujeto', xml_document_root).tap { |e| e.content = item.base_imponible_o_importe_no_sujeto })
         item_element.add_child(Nokogiri::XML::Node.new('sum1:CuotaRepercutida', xml_document_root).tap { |e| e.content = item.cuota_repercutida })
       end
 
@@ -156,7 +155,7 @@ module Verifactu
       sistema_informatico_nombre_sistema_element = Nokogiri::XML::Node.new('sum1:NombreSistemaInformatico', xml_document_root)
       sistema_informatico_nombre_sistema_element.content = registro.sistema_informatico.nombre_sistema_informatico
       sistema_informatico_element.add_child(sistema_informatico_nombre_sistema_element)
-      sistema_informatico_id_element = Nokogiri::XML::Node.new('sum1:IDSistemaInformatico', xml_document_root)
+      sistema_informatico_id_element = Nokogiri::XML::Node.new('sum1:IdSistemaInformatico', xml_document_root)
       sistema_informatico_id_element.content = registro.sistema_informatico.id_sistema_informatico
       sistema_informatico_element.add_child(sistema_informatico_id_element)
       sistema_informatico_version_element = Nokogiri::XML::Node.new('sum1:Version', xml_document_root)
@@ -171,7 +170,7 @@ module Verifactu
       sistema_informatico_tipo_uso_posible_multi_ot_element = Nokogiri::XML::Node.new('sum1:TipoUsoPosibleMultiOT', xml_document_root)
       sistema_informatico_tipo_uso_posible_multi_ot_element.content = registro.sistema_informatico.tipo_uso_posible_multi_ot
       sistema_informatico_element.add_child(sistema_informatico_tipo_uso_posible_multi_ot_element)
-      sistema_informatico_indicador_multi_ot_element = Nokogiri::XML::Node.new('sum1:IndicadorMultiOT', xml_document_root)
+      sistema_informatico_indicador_multi_ot_element = Nokogiri::XML::Node.new('sum1:IndicadorMultiplesOT', xml_document_root)
       sistema_informatico_indicador_multi_ot_element.content = registro.sistema_informatico.indicador_multi_ot
       sistema_informatico_element.add_child(sistema_informatico_indicador_multi_ot_element)
       xml_document_root.add_child(sistema_informatico_element)

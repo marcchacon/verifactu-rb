@@ -1,6 +1,10 @@
+require 'savon'
+require 'nokogiri'
+
 require_relative "verifactu/config/verifactu_config"
 require_relative "verifactu/helpers/validador"
 require_relative "verifactu/helpers/generar_huella_registro_alta"
+require_relative "verifactu/helpers/valida_suministro_xsd"
 
 require_relative "verifactu/registro_facturacion/registro_alta"
 require_relative "verifactu/registro_facturacion/registro_anulacion"
@@ -18,5 +22,6 @@ require_relative "verifactu/cabecera"
 require_relative "verifactu/registro_alta_builder"
 require_relative "verifactu/registro_alta_xml_builder"
 require_relative "verifactu/reg_factu_sistema_facturacion_xml_builder"
+require_relative "verifactu/envio_verifactu_service"
 
 require_relative "verifactu/version"

@@ -60,6 +60,19 @@ realizar el envío.
   
 	# Compone el mensaje para el envío
 	xml_remision = Verifactu::RegFactuSistemaFacturacionXmlBuilder.build(cabecera, registro_alta_xml)
+  xml = xml_remision.root.to_xml
+
+  # Valida el esquema
+  validate_schema = Verifactu::Helpers::ValidaSuministroXSD.execute(xml)
+
+  # Envía a verifactu
+  if validate_schema[:valid]
+    service = Verifactu::EnvioVerifactuService.new
+    result = service.send_verifactu(environment: :pre_prod,
+                          reg_factu_xml: xml,
+                          client_cert: cert,
+                          client_key: key)
+  end
 	
 
 ```

@@ -19,7 +19,11 @@ RSpec.describe Verifactu::RegFactuSistemaFacturacionXmlBuilder do
       # Genera el XML
       xml = Verifactu::RegFactuSistemaFacturacionXmlBuilder.build(cabecera, registro_alta_xml)
 
-      p "xml:: #{xml.root.to_xml}"
+      # Validación del XML contra el esquema XSD
+      validate_schema = Verifactu::Helpers::ValidaSuministroXSD.execute(xml.root.to_xml)
+
+      expect(validate_schema[:valid]).to be true
+      #p "xml:: #{xml.root.to_xml}"
 
     end
 

@@ -1,4 +1,3 @@
-require 'nokogiri'
 module Verifactu
   class RegFactuSistemaFacturacionXmlBuilder
     #
@@ -16,6 +15,15 @@ module Verifactu
 
       # Create the XML document
       xml_document = Nokogiri::XML('<sum:RegFactuSistemaFacturacion/>')
+
+      # Set the namespaces
+      root = xml_document.root
+      root.add_namespace_definition('sum', 'https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd')
+      root.add_namespace_definition('sum1', 'https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroInformacion.xsd')
+      root.add_namespace_definition('xsi', 'http://www.w3.org/2001/XMLSchema-instance')
+      root['xsi:schemaLocation'] = 'https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/tike/cont/ws/SuministroLR.xsd SuministroLR.xsd'
+
+
       xml_document.encoding = 'UTF-8'
 
       # Agrega la cabecera
