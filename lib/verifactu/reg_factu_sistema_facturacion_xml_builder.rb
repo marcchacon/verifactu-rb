@@ -5,12 +5,13 @@ module Verifactu
     # It creates an XML representation of the RegFactuSistemaFacturacion.
     # xml.root.to_xml
     #
-    # @param cabecera [Verifactu::RegistroFacturacion::Cabecera] The header information for the XML.
+    # @param cabecera [Verifactu::Cabecera] The header information for the XML.
     # @param registro_alta_xml [Nokigiri::XML::Document] The XML document containing the RegistroAlta data.
+    # @return [Nokogiri::XML::Document] The XML document representing the RegFactuSistemaFacturacion.
     #
     def self.build(cabecera, registro_alta_xml)
 
-      raise ArgumentError, "cabecera must be an instance of Cabecera" unless cabecera.is_a?(RegistroFacturacion::Cabecera)
+      raise ArgumentError, "cabecera must be an instance of Cabecera" unless cabecera.is_a?(Cabecera)
       raise ArgumentError, "registro_alta_xml must be an instance of Nokogiri::XML::Document" unless registro_alta_xml.is_a?(Nokogiri::XML::Document)
 
       # Create the XML document

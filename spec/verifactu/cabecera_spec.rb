@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Verifactu::RegistroFacturacion::Cabecera do
+RSpec.describe Verifactu::Cabecera do
 
   describe '#initialize' do
 
