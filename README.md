@@ -47,7 +47,7 @@ realizar el envío.
 	registro_alta_xml = Verifactu::RegistroAltaXmlBuilder.build(registro_alta)
 	
 	# Genera la cabecera
-	cabecera = Verifactu::RegistroFacturacion::Cabecera.new(
+	cabecera = Verifactu::Cabecera.new(
 							obligado_emision: Verifactu::RegistroFacturacion::PersonaFisicaJuridica.create_from_nif(
 								nombre_razon: 'Mi empresa SL',
 								nif: 'B12345674'
