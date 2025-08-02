@@ -1,5 +1,9 @@
 module Verifactu
   module RegistroFacturacion
+    #
+    # It represents registro facturación anulación at Verifactu.
+    # It is not implemented yet
+    #
     class RegistroAnulacion
       attr_reader :id_version,
                   :id_factura,

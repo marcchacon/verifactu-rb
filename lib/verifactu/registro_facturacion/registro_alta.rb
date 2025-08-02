@@ -2,6 +2,8 @@ require 'bigdecimal'
 
 module Verifactu
   module RegistroFacturacion
+    # It represents registro facturación alta at Verifactu.
+    # Do not create instances of this class directly, use RegistroAltaBuilder instead
     # Representa <sum:RegistroAlta>
     class RegistroAlta
       attr_reader :id_version,
